@@ -79,7 +79,7 @@ jobs:
           export LIFT_VERSION="${VERSION#v}"
           
           # Build the binary with Bun
-          bun build ${{ env.CLI_ENTRYPOINT }} --compile --target=${{ matrix.bun-target }} --outfile="$BINARY_NAME"
+          bun build --compile --outfile $BINARY_NAME ${{ env.CLI_ENTRYPOINT }} --minify          
           
           # Verify the binary was created
           if [ ! -f "$BINARY_NAME" ]; then
