@@ -74,6 +74,7 @@ jobs:
         run: bun test || echo "No tests configured, skipping..."
 
       - name: Build binary
+        shell: bash
         env:
           TARGET: ${{ matrix.bun-target }}
           VERSION: ${{ github.ref_name || github.event.inputs.tag || 'dev' }}
