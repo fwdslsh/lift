@@ -1,7 +1,7 @@
 {
   "name": "@fwdslsh/lift",
   "version": "0.0.1",
-  "description": "A lightweight CLI that scans a directory of Markdown files to generate llms.txt (structured index) and llms-full.txt (full content)",
+  "description": "A lightweight CLI that scans a directory of Markdown files to generate llms.txt (structured index), llms-full.txt (full content), and optional index.json files for directory navigation and metadata",
   "type": "module",
   "main": "src/cli.js",
   "bin": {

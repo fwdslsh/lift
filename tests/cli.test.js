@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { mkdir, writeFile, rm, readFile } from 'fs/promises';
+import { mkdir, writeFile, rm, readFile, stat } from 'fs/promises';
 import { join } from 'path';
 
 describe('CLI Integration', () => {
@@ -71,5 +71,28 @@ describe('CLI Integration', () => {
     const result = await runCLI(['--input']);
     expect(result.code).toBe(1);
     expect(result.stderr).toMatch(/requires a path argument/);
+  });
+
+  test('generates index.json files with --generate-index flag', async () => {
+    const result = await runCLI(['--input', testInputDir, '--output', testOutputDir, '--generate-index']);
+    expect(result.code).toBe(0);
+    
+    // Check that index files are created
+    const rootIndexStats = await stat(join(testOutputDir, 'index.json'));
+    expect(rootIndexStats.isFile()).toBe(true);
+    
+    const masterIndexStats = await stat(join(testOutputDir, 'master-index.json'));
+    expect(masterIndexStats.isFile()).toBe(true);
+    
+    // Check that regular outputs are still created
+    const llms = await readFile(join(testOutputDir, 'llms.txt'), 'utf8');
+    expect(llms).toMatch(/Core Documentation/);
+  });
+
+  test('help text includes --generate-index option', async () => {
+    const result = await runCLI(['--help']);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toMatch(/--generate-index/);
+    expect(result.stdout).toMatch(/Generate index\.json files/);
   });
 });
