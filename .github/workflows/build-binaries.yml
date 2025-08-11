@@ -132,6 +132,7 @@ jobs:
 
       - name: Set outputs
         id: set-outputs
+        shell: bash
         if: ${{ inputs.upload-artifacts }}
         run: |
           ARTIFACT_NAME="${{ env.PROJECT_NAME }}-${{ matrix.target }}"
