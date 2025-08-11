@@ -218,4 +218,38 @@ describe('MarkdownProcessor', () => {
     expect(doc.relativePath).toBe('index.md');
     expect(typeof doc.content).toBe('string');
   });
+
+  test('isIndexDocument identifies HTML index files correctly', () => {
+    const processor = new MarkdownProcessor(testDir);
+    
+    expect(processor.isIndexDocument('index.html')).toBe(true);
+    expect(processor.isIndexDocument('readme.html')).toBe(true);
+    expect(processor.isIndexDocument('home.html')).toBe(true);
+    expect(processor.isIndexDocument('docs/index.html')).toBe(true);
+    expect(processor.isIndexDocument('guide.html')).toBe(false);
+  });
+
+  test('getIndexPriority handles HTML files correctly', () => {
+    const processor = new MarkdownProcessor(testDir);
+    
+    expect(processor.getIndexPriority('index.html')).toBe(1);
+    expect(processor.getIndexPriority('readme.html')).toBe(2);
+    expect(processor.getIndexPriority('home.html')).toBe(3);
+    expect(processor.getIndexPriority('docs/index.html')).toBe(1); // basename is still index.html, so priority 1
+  });
+
+  test('stripFrontmatter works with HTML files', () => {
+    const processor = new MarkdownProcessor(testDir);
+    const htmlWithFrontmatter = `---
+title: Test HTML
+layout: default
+---
+<h1>HTML Content</h1>
+<p>This is HTML content.</p>`;
+    
+    const cleaned = processor.stripFrontmatter(htmlWithFrontmatter);
+    expect(cleaned).toBe('<h1>HTML Content</h1>\n<p>This is HTML content.</p>');
+    expect(cleaned).not.toContain('---');
+    expect(cleaned).not.toContain('title: Test HTML');
+  });
 });

@@ -7,14 +7,16 @@ const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url
 
 function showHelp() {
   console.log(`
-Lift - Generate llms.txt from a directory of markdown files
+Lift - Generate llms.txt from a directory of markdown and HTML files
 
 Usage:
   lift [options]
 
 Options:
-  --input, -i <path>     Source directory of Markdown files (default: current directory)
+  --input, -i <path>     Source directory of Markdown/HTML files (default: current directory)
   --output, -o <path>    Destination directory for generated files (default: current directory)
+  --include <pattern>    Include files matching glob pattern (can be used multiple times)
+  --exclude <pattern>    Exclude files matching glob pattern (can be used multiple times)
   --generate-index       Generate index.json files for directory navigation and metadata
   --silent               Suppress non-error output
   --help, -h             Show this help message
@@ -27,11 +29,21 @@ Examples:
   # Specify input and output directories
   lift --input docs --output build
 
-  # Generate with index.json files
-  lift --input docs --output build --generate-index
+  # Include only specific patterns
+  lift --include "*.md" --include "guide/*.html"
+
+  # Exclude specific patterns
+  lift --exclude "*.draft.md" --exclude "temp/*"
+
+  # Combine include/exclude with other options
+  lift -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
 
   # Silent mode
   lift -i docs -o build --silent
+
+File Types:
+  - Markdown files (.md, .mdx)
+  - HTML files (.html)
 
 Output:
   - llms.txt: Structured index with Core Documentation and Optional sections
@@ -50,7 +62,9 @@ function parseArgs() {
     input: '.',
     output: '.',
     silent: false,
-    generateIndex: false
+    generateIndex: false,
+    includeGlobs: [],
+    excludeGlobs: []
   };
   
   for (let i = 0; i < args.length; i++) {
@@ -89,6 +103,24 @@ function parseArgs() {
         i++; // Skip next argument
         break;
         
+      case '--include':
+        if (!nextArg || nextArg.startsWith('-')) {
+          console.error('Error: --include requires a glob pattern argument');
+          process.exit(1);
+        }
+        options.includeGlobs.push(nextArg);
+        i++; // Skip next argument
+        break;
+        
+      case '--exclude':
+        if (!nextArg || nextArg.startsWith('-')) {
+          console.error('Error: --exclude requires a glob pattern argument');
+          process.exit(1);
+        }
+        options.excludeGlobs.push(nextArg);
+        i++; // Skip next argument
+        break;
+        
       case '--silent':
         options.silent = true;
         break;
@@ -116,7 +148,9 @@ async function main() {
     
     const processor = new LiftProcessor(options.input, options.output, {
       silent: options.silent,
-      generateIndex: options.generateIndex
+      generateIndex: options.generateIndex,
+      includeGlobs: options.includeGlobs,
+      excludeGlobs: options.excludeGlobs
     });
     
     await processor.process();

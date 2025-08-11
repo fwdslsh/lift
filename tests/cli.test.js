@@ -95,4 +95,44 @@ describe('CLI Integration', () => {
     expect(result.stdout).toMatch(/--generate-index/);
     expect(result.stdout).toMatch(/Generate index\.json files/);
   });
+
+  test('help text includes new include/exclude options', async () => {
+    const result = await runCLI(['--help']);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toMatch(/--include <pattern>/);
+    expect(result.stdout).toMatch(/--exclude <pattern>/);
+    expect(result.stdout).toMatch(/HTML files/);
+  });
+
+  test('errors when include option is missing pattern', async () => {
+    const result = await runCLI(['--include']);
+    expect(result.code).toBe(1);
+    expect(result.stderr).toMatch(/requires a glob pattern argument/);
+  });
+
+  test('errors when exclude option is missing pattern', async () => {
+    const result = await runCLI(['--exclude']);
+    expect(result.code).toBe(1);
+    expect(result.stderr).toMatch(/requires a glob pattern argument/);
+  });
+
+  test('processes files with include glob pattern', async () => {
+    const result = await runCLI(['--input', testInputDir, '--output', testOutputDir, '--include', '*.md']);
+    expect(result.code).toBe(0);
+    
+    const llmsFile = join(testOutputDir, 'llms.txt');
+    const llms = await readFile(llmsFile, 'utf8');
+    expect(llms).toMatch(/readme\.md|tutorial\.md/);
+    expect(llms).not.toMatch(/\.html/);
+  });
+
+  test('processes files with exclude glob pattern', async () => {
+    const result = await runCLI(['--input', testInputDir, '--output', testOutputDir, '--exclude', '**/reference.md']);
+    expect(result.code).toBe(0);
+    
+    const llmsFile = join(testOutputDir, 'llms.txt');
+    const llms = await readFile(llmsFile, 'utf8');
+    expect(llms).toMatch(/readme\.md|tutorial\.md/);
+    expect(llms).not.toMatch(/reference\.md/);
+  });
 });

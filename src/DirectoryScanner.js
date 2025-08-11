@@ -1,5 +1,6 @@
 import { readdir, stat } from "fs/promises";
 import { join, relative } from "path";
+import { minimatch } from "minimatch";
 
 /**
  * DirectoryScanner - Responsible for scanning directories and discovering files
@@ -20,7 +21,9 @@ export class DirectoryScanner {
       ".vercel",
       ".netlify"
     ];
-    this.isMarkdownFileFn = options.isMarkdownFileFn || this.defaultIsMarkdownFile.bind(this);
+    this.includeGlobs = options.includeGlobs || [];
+    this.excludeGlobs = options.excludeGlobs || [];
+    this.isMarkdownFileFn = options.isMarkdownFileFn || this.defaultIsDocumentFile.bind(this);
   }
 
   /**
@@ -48,8 +51,8 @@ export class DirectoryScanner {
           files.push(...subFiles);
           
         } else if (entry.isFile()) {
-          // Include only markdown files
-          if (this.isMarkdownFileFn(entry.name) && !this.shouldExclude(entry.name, relativePath)) {
+          // Include only document files (markdown or HTML)
+          if (this.isMarkdownFileFn(entry.name) && !this.shouldExclude(entry.name, relativePath) && this.matchesGlobs(relativePath)) {
             files.push(fullPath);
           }
         }
@@ -90,10 +93,44 @@ export class DirectoryScanner {
   }
 
   /**
-   * Default implementation for checking if a file is markdown
+   * Check if a file path matches the include/exclude glob patterns
+   */
+  matchesGlobs(filePath) {
+    // If there are include globs, the file must match at least one
+    if (this.includeGlobs.length > 0) {
+      const matchesInclude = this.includeGlobs.some(pattern => 
+        minimatch(filePath, pattern)
+      );
+      if (!matchesInclude) {
+        return false;
+      }
+    }
+
+    // If there are exclude globs, the file must not match any
+    if (this.excludeGlobs.length > 0) {
+      const matchesExclude = this.excludeGlobs.some(pattern => 
+        minimatch(filePath, pattern)
+      );
+      if (matchesExclude) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Default implementation for checking if a file is a supported document type (markdown or HTML)
+   */
+  defaultIsDocumentFile(filename) {
+    const lower = filename.toLowerCase();
+    return lower.endsWith('.md') || lower.endsWith('.mdx') || lower.endsWith('.html');
+  }
+
+  /**
+   * Legacy method name for backward compatibility - now delegates to defaultIsDocumentFile
    */
   defaultIsMarkdownFile(filename) {
-    const lower = filename.toLowerCase();
-    return lower.endsWith('.md') || lower.endsWith('.mdx');
+    return this.defaultIsDocumentFile(filename);
   }
 }

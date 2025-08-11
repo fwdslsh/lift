@@ -52,7 +52,8 @@ describe('DirectoryScanner', () => {
     expect(scanner.defaultIsMarkdownFile('test.MD')).toBe(true);
     expect(scanner.defaultIsMarkdownFile('test.MDX')).toBe(true);
     expect(scanner.defaultIsMarkdownFile('test.txt')).toBe(false);
-    expect(scanner.defaultIsMarkdownFile('test.html')).toBe(false);
+    expect(scanner.defaultIsMarkdownFile('test.html')).toBe(true); // HTML now supported
+    expect(scanner.defaultIsMarkdownFile('test.HTML')).toBe(true); // Case insensitive
     expect(scanner.defaultIsMarkdownFile('test')).toBe(false);
   });
 
@@ -127,5 +128,51 @@ describe('DirectoryScanner', () => {
     const files = await scanner.scanDirectory(excludedDir);
     
     expect(files).toEqual([]);
+  });
+
+  test('matchesGlobs works with include patterns', () => {
+    const scanner = new DirectoryScanner({
+      includeGlobs: ['*.md', 'docs/*.html']
+    });
+    
+    expect(scanner.matchesGlobs('test.md')).toBe(true);
+    expect(scanner.matchesGlobs('docs/guide.html')).toBe(true);
+    expect(scanner.matchesGlobs('test.txt')).toBe(false);
+    expect(scanner.matchesGlobs('other/guide.html')).toBe(false);
+  });
+
+  test('matchesGlobs works with exclude patterns', () => {
+    const scanner = new DirectoryScanner({
+      excludeGlobs: ['draft*', 'temp/*']
+    });
+    
+    expect(scanner.matchesGlobs('test.md')).toBe(true);
+    expect(scanner.matchesGlobs('draft.md')).toBe(false);
+    expect(scanner.matchesGlobs('draft-notes.html')).toBe(false);
+    expect(scanner.matchesGlobs('temp/file.md')).toBe(false);
+    expect(scanner.matchesGlobs('docs/temp.md')).toBe(true); // doesn't match temp/*
+  });
+
+  test('matchesGlobs works with both include and exclude patterns', () => {
+    const scanner = new DirectoryScanner({
+      includeGlobs: ['*.md', '*.html'],
+      excludeGlobs: ['draft*', 'temp/*']
+    });
+    
+    expect(scanner.matchesGlobs('test.md')).toBe(true);
+    expect(scanner.matchesGlobs('guide.html')).toBe(true);
+    expect(scanner.matchesGlobs('test.txt')).toBe(false); // not included
+    expect(scanner.matchesGlobs('draft.md')).toBe(false); // excluded
+    expect(scanner.matchesGlobs('temp/file.html')).toBe(false); // excluded
+  });
+
+  test('defaultIsDocumentFile includes HTML files', () => {
+    const scanner = new DirectoryScanner();
+    
+    expect(scanner.defaultIsDocumentFile('test.md')).toBe(true);
+    expect(scanner.defaultIsDocumentFile('test.mdx')).toBe(true);
+    expect(scanner.defaultIsDocumentFile('test.html')).toBe(true);
+    expect(scanner.defaultIsDocumentFile('test.HTML')).toBe(true);
+    expect(scanner.defaultIsDocumentFile('test.txt')).toBe(false);
   });
 });
