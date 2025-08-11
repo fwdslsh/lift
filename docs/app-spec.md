@@ -2,7 +2,7 @@
 
 ## Overview
 
-Lift is a lightweight, efficient CLI tool designed to scan Markdown directories and generate two primary outputs: `llms.txt` (structured index) and `llms-full.txt` (full concatenated content). Additionally, it can generate `index.json` files for directory navigation and metadata collection. The tool is designed for seamless integration with AI systems, documentation workflows, and the fwdslsh ecosystem following the philosophy of minimal, readable, composable tools.
+Lift is a lightweight, efficient CLI tool designed to scan Markdown and HTML directories and generate two primary outputs: `llms.txt` (structured index) and `llms-full.txt` (full concatenated content). Additionally, it can generate `index.json` files for directory navigation and metadata collection. The tool supports flexible file filtering through include/exclude glob patterns and is designed for seamless integration with AI systems, documentation workflows, and the fwdslsh ecosystem following the philosophy of minimal, readable, composable tools.
 
 ## Target Users
 
@@ -20,7 +20,8 @@ Transform source Markdown files with YAML frontmatter into structured, AI-friend
 
 ### Key Features
 
-- **Recursive Markdown Scanning**: Discovers `.md` and `.mdx` files across directory structures
+- **Recursive Markdown and HTML Scanning**: Discovers `.md`, `.mdx`, and `.html` files across directory structures
+- **Flexible File Filtering**: Include/exclude glob patterns for precise file selection
 - **YAML Frontmatter Stripping**: Cleanses content for consistent processing
 - **Intelligent Document Ordering**: Prioritizes index/readme files, important documentation, then alphabetical order
 - **Dual Output Generation**: Creates both structured index and full content files
@@ -55,7 +56,7 @@ lift [options]
 **Workflow:**
 
 1. Validates source directory exists and is accessible
-2. Recursively scans for `.md` and `.mdx` files while respecting exclusion patterns
+2. Recursively scans for `.md`, `.mdx`, and `.html` files while respecting exclusion patterns and include/exclude globs
 3. Reads and processes files, stripping YAML frontmatter
 4. Orders documents using importance heuristics (index → important → alphabetical)
 5. Generates `llms.txt` (structured index) and `llms-full.txt` (full content)
@@ -77,10 +78,10 @@ lift [options]
 
 **`--input, -i <directory>`**
 
-- **Purpose:** Specify source directory containing Markdown files
+- **Purpose:** Specify source directory containing Markdown and HTML files
 - **Default:** `.` (current directory)
 - **Validation:** Must be existing, readable directory
-- **Behavior:** Recursively scanned for `.md` and `.mdx` files
+- **Behavior:** Recursively scanned for `.md`, `.mdx`, and `.html` files
 
 **`--output, -o <directory>`**
 
@@ -90,6 +91,22 @@ lift [options]
 - **Behavior:** Created if doesn't exist, files overwritten if present
 
 #### Feature Options
+
+**`--include <pattern>`**
+
+- **Purpose:** Include files matching glob pattern (can be used multiple times)
+- **Default:** All supported files included
+- **Pattern Format:** Standard glob patterns (e.g., `*.md`, `docs/**/*.html`, `*guide*`)
+- **Behavior:** Only files matching at least one include pattern are processed
+- **Examples:** `--include "*.md"`, `--include "docs/*.html"`, `--include "**/guide*"`
+
+**`--exclude <pattern>`**
+
+- **Purpose:** Exclude files matching glob pattern (can be used multiple times)
+- **Default:** Standard exclusion patterns applied (node_modules, .git, etc.)
+- **Pattern Format:** Standard glob patterns (e.g., `draft*`, `temp/*`, `**/*test*`)
+- **Behavior:** Files matching any exclude pattern are skipped
+- **Examples:** `--exclude "*.draft.md"`, `--exclude "temp/*"`, `--exclude "**/backup/**"`
 
 **`--generate-index`**
 
@@ -134,13 +151,36 @@ lift --input docs --output build --generate-index
 lift -i docs -o build --silent
 ```
 
+#### File Filtering Examples
+
+```bash
+# Include only markdown files
+lift --include "*.md"
+
+# Include specific directories and file types
+lift --include "docs/*.md" --include "guides/*.html"
+
+# Exclude draft and temporary files
+lift --exclude "*.draft.md" --exclude "temp/*"
+
+# Combine include/exclude patterns
+lift --include "docs/**/*" --exclude "**/draft*" --exclude "**/temp*"
+
+# Process only guides and tutorials
+lift --include "*guide*" --include "*tutorial*"
+```
+
 #### Advanced Workflows
 
 ```bash
-# Documentation pipeline
-lift --input documentation --output dist --generate-index
+# Documentation pipeline with filtering
+lift --input documentation --output dist --include "*.md" --exclude "archive/*" --generate-index
 
 # AI training data preparation
+lift --input knowledge-base --output training-data --exclude "**/private/**" --silent
+
+# Multi-format processing
+lift --include "*.md" --include "*.html" --exclude "draft*" --output processed
 lift --input knowledge-base --output training-data --silent
 
 # Multi-project processing
