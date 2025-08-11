@@ -223,6 +223,35 @@ docs/
 }
 ```
 
+## Architecture
+
+Lift follows SOLID design principles with a modular, extensible architecture:
+
+### Core Components
+
+- **`LiftProcessor`**: Main orchestrator that coordinates the workflow
+- **`DirectoryScanner`**: Handles file discovery and directory traversal
+- **`MarkdownProcessor`**: Processes markdown content and applies document ordering
+- **`OutputGenerator`**: Creates llms.txt output files
+- **`IndexGenerator`**: Generates JSON navigation and metadata files
+
+### Design Benefits
+
+- **Single Responsibility**: Each class has a focused, well-defined purpose
+- **Extensibility**: Easy to add new features or modify behavior
+- **Testability**: Components can be tested in isolation
+- **Maintainability**: Clear separation of concerns makes code easier to understand and modify
+
+### Workflow
+
+1. `LiftProcessor` initializes and configures specialized components
+2. `DirectoryScanner` discovers all markdown files in the input directory
+3. `MarkdownProcessor` reads, cleans, and orders documents by importance
+4. `OutputGenerator` creates the llms.txt and llms-full.txt files
+5. `IndexGenerator` optionally creates JSON navigation metadata
+
+For detailed technical specifications, see the [App Spec](docs/app-spec.md).
+
 ## Integration with `inform`
 
 **Lift** is designed to work seamlessly with [`inform`](https://github.com/fwdslsh/inform):
