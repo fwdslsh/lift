@@ -10,7 +10,8 @@
   "scripts": {
     "start": "bun src/cli.js",
     "dev": "bun --watch src/cli.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "bun test",
+    "test:watch": "bun test --watch"
   },
   "keywords": [
     "markdown",

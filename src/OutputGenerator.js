@@ -26,7 +26,8 @@ export class OutputGenerator {
     const llmsContent = this.generateLlmsIndex(projectName, orderedDocs);
     
     // Generate llms-full.txt (full content)
-    const llmsFullContent = this.generateLlmsFull(projectName, orderedDocs.all);
+    const allDocs = orderedDocs.all || [...orderedDocs.index, ...orderedDocs.important, ...orderedDocs.other];
+    const llmsFullContent = this.generateLlmsFull(projectName, allDocs);
     
     // Write files
     const llmsPath = join(this.outputDir, 'llms.txt');

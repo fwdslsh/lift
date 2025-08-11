@@ -193,11 +193,11 @@ describe('LiftProcessor', () => {
     });
 
     test('getFileExtension extracts file extensions correctly', () => {
-      const processor = new LiftProcessor();
-      expect(processor.getFileExtension('file.md')).toBe('.md');
-      expect(processor.getFileExtension('file.txt')).toBe('.txt');
-      expect(processor.getFileExtension('file')).toBe('');
-      expect(processor.getFileExtension('file.name.ext')).toBe('.ext');
+      const indexGenerator = new IndexGenerator();
+      expect(indexGenerator.getFileExtension('file.md')).toBe('.md');
+      expect(indexGenerator.getFileExtension('file.txt')).toBe('.txt');
+      expect(indexGenerator.getFileExtension('file')).toBe('');
+      expect(indexGenerator.getFileExtension('file.name.ext')).toBe('.ext');
     });
 
     test('index generation does not run when disabled', async () => {
