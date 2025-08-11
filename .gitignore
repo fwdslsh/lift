@@ -1,0 +1,15 @@
+node_modules
+bun.lockb
+
+# Test outputs
+test-output/
+demo-output/
+
+# Temporary files
+/tmp/
+*.tmp
+*.log
+
+# Generated LLMS files (for testing)
+llms.txt
+llms-full.txt
