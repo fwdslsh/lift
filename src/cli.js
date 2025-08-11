@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 
 import { LiftProcessor } from './LiftProcessor.js';
-import { readFile } from 'fs/promises';
 
-const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url)));
+// Version is embedded at build time or taken from package.json in development
+const VERSION = process.env.LIFT_VERSION || '0.0.1';
 
 function showHelp() {
   console.log(`
@@ -65,7 +65,7 @@ function parseArgs() {
         break;
         
       case '--version':
-        console.log(pkg.version);
+        console.log(VERSION);
         process.exit(0);
         break;
         

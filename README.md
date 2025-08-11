@@ -8,10 +8,18 @@ A lightweight CLI that scans a directory of Markdown files to generate `llms.txt
 
 ## Installation
 
-This tool requires [Bun](https://bun.sh) runtime:
+```bash
+curl -fsSL https://raw.githubusercontent.com/fwdslsh/lift/main/install.sh | sh
+```
+
+### Manual Downloads
+
+Download pre-built binaries from [GitHub Releases](https://github.com/fwdslsh/lift/releases).
+
+### Docker
 
 ```bash
-curl -fsSL https://bun.sh/install | bash
+docker run fwdslsh/lift:latest --help
 ```
 
 ## Usage
@@ -282,6 +290,17 @@ bun --watch src/cli.js
 chmod +x src/cli.js
 ./src/cli.js --help
 ```
+
+## Release Automation
+
+This project includes comprehensive release automation with:
+
+- **Cross-platform binaries**: Linux, macOS, Windows (x86_64 and ARM64)
+- **Automated releases**: GitHub releases with release notes
+- **Docker images**: Multi-platform images published to Docker Hub
+- **Installation script**: One-command installation from GitHub releases
+
+For detailed information about the release process, binary builds, and deployment, see [RELEASE_AUTOMATION.md](docs/RELEASE_AUTOMATION.md).
 
 ## License
 
