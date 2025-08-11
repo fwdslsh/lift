@@ -2,8 +2,8 @@ import { readFile } from "fs/promises";
 import { relative, basename } from "path";
 
 /**
- * MarkdownProcessor - Responsible for processing markdown files and content
- * Follows Single Responsibility Principle by focusing solely on markdown processing
+ * DocumentProcessor - Responsible for processing markdown and HTML files and content
+ * Follows Single Responsibility Principle by focusing solely on document processing
  */
 export class MarkdownProcessor {
   constructor(inputDir, options = {}) {
@@ -37,7 +37,7 @@ export class MarkdownProcessor {
   }
 
   /**
-   * Strip YAML frontmatter from markdown content
+   * Strip YAML frontmatter from content (works for both markdown and HTML with frontmatter)
    */
   stripFrontmatter(content) {
     // Remove YAML frontmatter (--- at start, content, --- delimiter)
@@ -86,10 +86,13 @@ export class MarkdownProcessor {
     return (
       filename === 'index.md' ||
       filename === 'index.mdx' ||
+      filename === 'index.html' ||
       filename === 'readme.md' ||
       filename === 'readme.mdx' ||
+      filename === 'readme.html' ||
       filename === 'home.md' ||
       filename === 'home.mdx' ||
+      filename === 'home.html' ||
       lower.includes('/index.') ||
       lower.includes('/readme.') ||
       lower.includes('/home.')
@@ -118,9 +121,9 @@ export class MarkdownProcessor {
     const filename = basename(path).toLowerCase();
     
     // Priority: exact index/readme at root, then others
-    if (filename === 'index.md' || filename === 'index.mdx') return 1;
-    if (filename === 'readme.md' || filename === 'readme.mdx') return 2;
-    if (filename === 'home.md' || filename === 'home.mdx') return 3;
+    if (filename === 'index.md' || filename === 'index.mdx' || filename === 'index.html') return 1;
+    if (filename === 'readme.md' || filename === 'readme.mdx' || filename === 'readme.html') return 2;
+    if (filename === 'home.md' || filename === 'home.mdx' || filename === 'home.html') return 3;
     return 4;
   }
 

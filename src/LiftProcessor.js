@@ -29,7 +29,9 @@ export class LiftProcessor {
         ".output",
         ".vercel",
         ".netlify"
-      ]
+      ],
+      includeGlobs: options.includeGlobs || [],
+      excludeGlobs: options.excludeGlobs || []
     });
     
     this.markdownProcessor = new MarkdownProcessor(this.inputDir, {

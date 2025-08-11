@@ -1,6 +1,6 @@
 # Lift
 
-A lightweight CLI that scans a directory of Markdown files to generate `llms.txt` (structured index) and `llms-full.txt` (full content), designed to integrate seamlessly with `inform` and follow the fwdslsh philosophy.
+A lightweight CLI that scans a directory of Markdown and HTML files to generate `llms.txt` (structured index) and `llms-full.txt` (full content), designed to integrate seamlessly with `inform` and follow the fwdslsh philosophy.
 
 ## Philosophy
 
@@ -34,6 +34,15 @@ lift --input docs --output build
 # Use short flags
 lift -i docs -o build
 
+# Include only specific file patterns
+lift --include "*.md" --include "guide/*.html"
+
+# Exclude specific patterns  
+lift --exclude "*.draft.md" --exclude "temp/*"
+
+# Combine include/exclude with other options
+lift -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
+
 # Silent mode (suppress non-error output)
 lift --input docs --output build --silent
 
@@ -46,8 +55,10 @@ lift --version
 
 ## Flags
 
-- `--input, -i <path>`: Source directory of Markdown files (default: current directory)
+- `--input, -i <path>`: Source directory of Markdown/HTML files (default: current directory)
 - `--output, -o <path>`: Destination directory for generated files (default: current directory)
+- `--include <pattern>`: Include files matching glob pattern (can be used multiple times)
+- `--exclude <pattern>`: Exclude files matching glob pattern (can be used multiple times)
 - `--generate-index`: Generate index.json files for directory navigation and metadata
 - `--silent`: Suppress non-error output
 - `--help, -h`: Show usage information
@@ -57,14 +68,50 @@ lift --version
 
 ### File Discovery
 
-- Recursively scans the input directory for `.md` and `.mdx` files
+- Recursively scans the input directory for `.md`, `.mdx`, and `.html` files
 - Excludes common artifacts: `.git`, `node_modules`, `dist`, `build`, `out`, `coverage`, `.next`, `.nuxt`, `.output`, `.vercel`, `.netlify`
+- Supports include/exclude glob patterns for fine-grained file selection
+
+#### Glob Pattern Examples
+
+**Include patterns** (whitelist specific files):
+```bash
+# Include only markdown files
+lift --include "*.md"
+
+# Include specific directories and file types
+lift --include "docs/*.md" --include "guides/*.html"
+
+# Include files with specific naming patterns
+lift --include "*guide*" --include "*tutorial*"
+```
+
+**Exclude patterns** (blacklist specific files):
+```bash
+# Exclude draft files
+lift --exclude "*.draft.md" --exclude "*draft*"
+
+# Exclude temporary directories
+lift --exclude "temp/*" --exclude "backup/*"
+
+# Exclude specific file patterns
+lift --exclude "**/*test*" --exclude "**/*.bak"
+```
+
+**Combining patterns**:
+```bash
+# Include all docs but exclude drafts
+lift --include "docs/**/*" --exclude "**/draft*"
+
+# Process only markdown, exclude specific directories
+lift --include "*.md" --exclude "archive/*" --exclude "deprecated/*"
+```
 
 ### Document Processing
 
-- Strips YAML frontmatter from files
+- Strips YAML frontmatter from files (both Markdown and HTML)
 - Orders documents intelligently:
-  1. **Index/home files first**: `index.md`, `readme.md`, `home.md` (prioritized by name)
+  1. **Index/home files first**: `index.md`, `index.html`, `readme.md`, `readme.html`, `home.md`, `home.html` (prioritized by name)
   2. **Important documentation**: Files containing `doc`, `guide`, `tutorial`, `intro`, `getting-started`, etc.
   3. **Remaining files**: Alphabetically sorted
 
