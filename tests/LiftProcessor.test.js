@@ -1,4 +1,8 @@
 import { LiftProcessor } from '../src/LiftProcessor.js';
+import { DirectoryScanner } from '../src/DirectoryScanner.js';
+import { MarkdownProcessor } from '../src/MarkdownProcessor.js';
+import { OutputGenerator } from '../src/OutputGenerator.js';
+import { IndexGenerator } from '../src/IndexGenerator.js';
 import { mkdir, writeFile, rm, readdir, stat, readFile } from 'fs/promises';
 import { join } from 'path';
 
@@ -27,9 +31,9 @@ describe('LiftProcessor', () => {
     await rm(testOutputDir, { recursive: true, force: true });
   });
 
-  test('scanDirectory finds only markdown files and excludes patterns', async () => {
-    const processor = new LiftProcessor(testInputDir, testOutputDir);
-    const files = await processor.scanDirectory(testInputDir);
+  test('DirectoryScanner finds only markdown files and excludes patterns', async () => {
+    const scanner = new DirectoryScanner();
+    const files = await scanner.scanDirectory(testInputDir);
     expect(files.length).toBe(3); // index.md, guide.md, subdir/nested.md
     expect(files.some(f => f.endsWith('index.md'))).toBe(true);
     expect(files.some(f => f.endsWith('guide.md'))).toBe(true);
@@ -37,22 +41,23 @@ describe('LiftProcessor', () => {
     expect(files.some(f => f.includes('node_modules'))).toBe(false);
   });
 
-  test('isMarkdownFile correctly identifies markdown files', () => {
-    const processor = new LiftProcessor();
-    expect(processor.isMarkdownFile('foo.md')).toBe(true);
-    expect(processor.isMarkdownFile('foo.mdx')).toBe(true);
-    expect(processor.isMarkdownFile('foo.txt')).toBe(false);
+  test('DirectoryScanner correctly identifies markdown files', () => {
+    const scanner = new DirectoryScanner();
+    expect(scanner.defaultIsMarkdownFile('foo.md')).toBe(true);
+    expect(scanner.defaultIsMarkdownFile('foo.mdx')).toBe(true);
+    expect(scanner.defaultIsMarkdownFile('foo.txt')).toBe(false);
   });
 
-  test('shouldExclude works for excluded patterns', () => {
-    const processor = new LiftProcessor();
-    expect(processor.shouldExclude('node_modules', 'node_modules/ignore.md')).toBe(true);
-    expect(processor.shouldExclude('foo', 'foo')).toBe(false);
+  test('DirectoryScanner shouldExclude works for excluded patterns', () => {
+    const scanner = new DirectoryScanner();
+    expect(scanner.shouldExclude('node_modules', 'node_modules/ignore.md')).toBe(true);
+    expect(scanner.shouldExclude('foo', 'foo')).toBe(false);
   });
 
-  test('processFiles strips frontmatter and reads content', async () => {
-    const processor = new LiftProcessor(testInputDir, testOutputDir);
-    const files = await processor.scanDirectory(testInputDir);
+  test('MarkdownProcessor strips frontmatter and reads content', async () => {
+    const scanner = new DirectoryScanner();
+    const processor = new MarkdownProcessor(testInputDir);
+    const files = await scanner.scanDirectory(testInputDir);
     const docs = await processor.processFiles(files);
     
     // Find the index.md document
@@ -62,9 +67,10 @@ describe('LiftProcessor', () => {
     expect(indexDoc.content).toContain('Index content');
   });
 
-  test('orderDocuments categorizes documents', async () => {
-    const processor = new LiftProcessor(testInputDir, testOutputDir);
-    const files = await processor.scanDirectory(testInputDir);
+  test('MarkdownProcessor categorizes documents', async () => {
+    const scanner = new DirectoryScanner();
+    const processor = new MarkdownProcessor(testInputDir);
+    const files = await scanner.scanDirectory(testInputDir);
     const docs = await processor.processFiles(files);
     const ordered = processor.orderDocuments(docs);
     expect(ordered.index.length).toBe(1); // index.md
@@ -72,12 +78,14 @@ describe('LiftProcessor', () => {
     expect(ordered.other.length).toBe(1); // subdir/nested.md
   });
 
-  test('generateOutputs creates llms.txt and llms-full.txt', async () => {
-    const processor = new LiftProcessor(testInputDir, testOutputDir);
-    const files = await processor.scanDirectory(testInputDir);
-    const docs = await processor.processFiles(files);
-    const ordered = processor.orderDocuments(docs);
-    await processor.generateOutputs(ordered);
+  test('OutputGenerator creates llms.txt and llms-full.txt', async () => {
+    const scanner = new DirectoryScanner();
+    const markdownProcessor = new MarkdownProcessor(testInputDir);
+    const outputGenerator = new OutputGenerator(testOutputDir);
+    const files = await scanner.scanDirectory(testInputDir);
+    const docs = await markdownProcessor.processFiles(files);
+    const ordered = markdownProcessor.orderDocuments(docs);
+    await outputGenerator.generateOutputs('test', ordered);
     const outFiles = await readdir(testOutputDir);
     expect(outFiles).toContain('llms.txt');
     expect(outFiles).toContain('llms-full.txt');

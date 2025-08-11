@@ -21,7 +21,7 @@ describe('CLI Integration', () => {
 
   function runCLI(args = [], env = {}) {
     return new Promise((resolve, reject) => {
-      const proc = spawn('bun', [cliPath, ...args], { env: { ...process.env, ...env } });
+      const proc = spawn('node', [cliPath, ...args], { env: { ...process.env, ...env } });
       let stdout = '';
       let stderr = '';
       proc.stdout.on('data', d => { stdout += d; });

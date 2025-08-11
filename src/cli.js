@@ -1,7 +1,9 @@
 #!/usr/bin/env bun
 
 import { LiftProcessor } from './LiftProcessor.js';
-import pkg from '../package.json';
+import { readFile } from 'fs/promises';
+
+const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url)));
 
 function showHelp() {
   console.log(`
