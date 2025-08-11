@@ -1,7 +1,9 @@
 #!/usr/bin/env bun
 
 import { LiftProcessor } from './LiftProcessor.js';
-import pkg from '../package.json';
+import { readFile } from 'fs/promises';
+
+const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url)));
 
 function showHelp() {
   console.log(`
@@ -13,6 +15,7 @@ Usage:
 Options:
   --input, -i <path>     Source directory of Markdown files (default: current directory)
   --output, -o <path>    Destination directory for generated files (default: current directory)
+  --generate-index       Generate index.json files for directory navigation and metadata
   --silent               Suppress non-error output
   --help, -h             Show this help message
   --version              Show the current version
@@ -24,12 +27,16 @@ Examples:
   # Specify input and output directories
   lift --input docs --output build
 
+  # Generate with index.json files
+  lift --input docs --output build --generate-index
+
   # Silent mode
   lift -i docs -o build --silent
 
 Output:
   - llms.txt: Structured index with Core Documentation and Optional sections
   - llms-full.txt: Full concatenated content with headers and separators
+  - index.json: Directory navigation and file metadata (with --generate-index)
 
 The tool follows the LLMS standard for AI-friendly documentation format.
 Document ordering: index/readme files first, then important docs (guides, tutorials), then remainder.
@@ -42,7 +49,8 @@ function parseArgs() {
   const options = {
     input: '.',
     output: '.',
-    silent: false
+    silent: false,
+    generateIndex: false
   };
   
   for (let i = 0; i < args.length; i++) {
@@ -85,6 +93,10 @@ function parseArgs() {
         options.silent = true;
         break;
         
+      case '--generate-index':
+        options.generateIndex = true;
+        break;
+        
       default:
         if (arg.startsWith('-')) {
           console.error(`Error: Unknown option ${arg}`);
@@ -103,7 +115,8 @@ async function main() {
     const options = parseArgs();
     
     const processor = new LiftProcessor(options.input, options.output, {
-      silent: options.silent
+      silent: options.silent,
+      generateIndex: options.generateIndex
     });
     
     await processor.process();

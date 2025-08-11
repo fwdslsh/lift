@@ -40,6 +40,7 @@ lift --version
 
 - `--input, -i <path>`: Source directory of Markdown files (default: current directory)
 - `--output, -o <path>`: Destination directory for generated files (default: current directory)
+- `--generate-index`: Generate index.json files for directory navigation and metadata
 - `--silent`: Suppress non-error output
 - `--help, -h`: Show usage information
 - `--version`: Show current version
@@ -75,6 +76,51 @@ lift --version
 - Each file has `## filename` heading
 - Files separated by `---`
 - Maintains document ordering from index
+
+#### `index.json` Files (Directory Navigation)
+
+When the `--generate-index` flag is used, Lift generates comprehensive directory navigation files:
+
+- **`index.json`** in each directory: Contains metadata for all files and subdirectories
+- **`master-index.json`** at output root: Aggregates project-wide statistics and directory navigation
+
+**Index JSON Structure:**
+```json
+{
+  "directory": "path/to/directory",
+  "generated": "2024-01-01T00:00:00Z",
+  "files": [
+    {
+      "name": "file.md",
+      "path": "relative/path/to/file.md",
+      "size": 1234,
+      "modified": "2024-01-01T00:00:00Z",
+      "type": "md",
+      "extension": ".md",
+      "isMarkdown": true
+    }
+  ],
+  "subdirectories": [
+    {
+      "name": "subdir",
+      "path": "relative/path/to/subdir",
+      "indexPath": "relative/path/to/subdir/index.json"
+    }
+  ],
+  "summary": {
+    "totalFiles": 5,
+    "totalSubdirectories": 2,
+    "markdownFiles": 3,
+    "totalSize": 12543
+  }
+}
+```
+
+**Use Cases:**
+- **LLM Integration**: Provides structured metadata for AI agents to navigate documentation
+- **Dynamic Menu Generation**: Enable programmatic creation of navigation menus
+- **File System Analysis**: Gather insights about documentation structure and content
+- **API Integration**: Allow other tools to understand and interact with the documentation structure
 
 ## Example Output
 
@@ -130,6 +176,82 @@ docs/
 [... continues for all files]
 ```
 
+**`index.json` (with `--generate-index`):**
+
+```json
+{
+  "directory": ".",
+  "generated": "2024-01-01T00:00:00Z",
+  "files": [
+    {
+      "name": "index.md",
+      "path": "index.md",
+      "size": 1234,
+      "modified": "2024-01-01T00:00:00Z",
+      "type": "md",
+      "extension": ".md",
+      "isMarkdown": true
+    },
+    {
+      "name": "misc.md", 
+      "path": "misc.md",
+      "size": 567,
+      "modified": "2024-01-01T00:00:00Z",
+      "type": "md",
+      "extension": ".md",
+      "isMarkdown": true
+    }
+  ],
+  "subdirectories": [
+    {
+      "name": "guide",
+      "path": "guide", 
+      "indexPath": "guide/index.json"
+    },
+    {
+      "name": "api",
+      "path": "api",
+      "indexPath": "api/index.json"
+    }
+  ],
+  "summary": {
+    "totalFiles": 2,
+    "totalSubdirectories": 2,
+    "markdownFiles": 2,
+    "totalSize": 1801
+  }
+}
+```
+
+## Architecture
+
+Lift follows SOLID design principles with a modular, extensible architecture:
+
+### Core Components
+
+- **`LiftProcessor`**: Main orchestrator that coordinates the workflow
+- **`DirectoryScanner`**: Handles file discovery and directory traversal
+- **`MarkdownProcessor`**: Processes markdown content and applies document ordering
+- **`OutputGenerator`**: Creates llms.txt output files
+- **`IndexGenerator`**: Generates JSON navigation and metadata files
+
+### Design Benefits
+
+- **Single Responsibility**: Each class has a focused, well-defined purpose
+- **Extensibility**: Easy to add new features or modify behavior
+- **Testability**: Components can be tested in isolation
+- **Maintainability**: Clear separation of concerns makes code easier to understand and modify
+
+### Workflow
+
+1. `LiftProcessor` initializes and configures specialized components
+2. `DirectoryScanner` discovers all markdown files in the input directory
+3. `MarkdownProcessor` reads, cleans, and orders documents by importance
+4. `OutputGenerator` creates the llms.txt and llms-full.txt files
+5. `IndexGenerator` optionally creates JSON navigation metadata
+
+For detailed technical specifications, see the [App Spec](docs/app-spec.md).
+
 ## Integration with `inform`
 
 **Lift** is designed to work seamlessly with [`inform`](https://github.com/fwdslsh/inform):
@@ -140,6 +262,9 @@ inform https://docs.example.com --output-dir docs
 
 # Use lift to generate LLMS artifacts from the crawled content
 lift --input docs --output build
+
+# Generate with directory index files for navigation
+lift --input docs --output build --generate-index
 ```
 
 This composable approach follows the fwdslsh philosophy of minimal, focused tools that work well together.
