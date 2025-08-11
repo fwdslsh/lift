@@ -79,10 +79,10 @@ jobs:
           export LIFT_VERSION="${VERSION#v}"
           
           # Build the binary with Bun
-          bun build --compile --outfile $BINARY_NAME ${{ env.CLI_ENTRYPOINT }} --minify          
+          bun build --compile --outfile "$BINARY_NAME" ${{ env.CLI_ENTRYPOINT }} --minify          
           
           # Verify the binary was created
-          if [ ! -f "$BINARY_NAME" ]; then
+          if [[ ! -f "$BINARY_NAME" ]]; then
             echo "Error: Binary was not created"
             exit 1
           fi
