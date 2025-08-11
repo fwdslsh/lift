@@ -20,7 +20,7 @@ curl -fsSL https://bun.sh/install | bash
 # Default (scan current directory, output to current directory)
 lift
 
-# Specify input and output directories  
+# Specify input and output directories
 lift --input docs --output build
 
 # Use short flags
@@ -39,7 +39,7 @@ lift --version
 ## Flags
 
 - `--input, -i <path>`: Source directory of Markdown files (default: current directory)
-- `--output, -o <path>`: Destination directory for generated files (default: current directory)  
+- `--output, -o <path>`: Destination directory for generated files (default: current directory)
 - `--silent`: Suppress non-error output
 - `--help, -h`: Show usage information
 - `--version`: Show current version
@@ -47,10 +47,12 @@ lift --version
 ## Behavior
 
 ### File Discovery
+
 - Recursively scans the input directory for `.md` and `.mdx` files
 - Excludes common artifacts: `.git`, `node_modules`, `dist`, `build`, `out`, `coverage`, `.next`, `.nuxt`, `.output`, `.vercel`, `.netlify`
 
-### Document Processing  
+### Document Processing
+
 - Strips YAML frontmatter from files
 - Orders documents intelligently:
   1. **Index/home files first**: `index.md`, `readme.md`, `home.md` (prioritized by name)
@@ -60,13 +62,15 @@ lift --version
 ### Output Generation
 
 #### `llms.txt` (Structured Index)
+
 - Title = input directory name
-- Blockquote summary: "Documentation for {directory}"  
+- Blockquote summary: "Documentation for {directory}"
 - **Core Documentation** section: Index files + important docs
 - **Optional** section: Remaining files
 - All links are relative paths (markdown format)
 
 #### `llms-full.txt` (Full Content)
+
 - Complete concatenated content
 - Each file has `## filename` heading
 - Files separated by `---`
@@ -75,6 +79,7 @@ lift --version
 ## Example Output
 
 For a directory structure like:
+
 ```
 docs/
 ├── index.md
@@ -86,21 +91,25 @@ docs/
 ```
 
 **`llms.txt`:**
+
 ```markdown
 # docs
 
 > Documentation for docs
 
 ## Core Documentation
+
 - [index.md](index.md)
 - [guide/getting-started.md](guide/getting-started.md)
 
 ## Optional
+
 - [api/reference.md](api/reference.md)
 - [misc.md](misc.md)
 ```
 
 **`llms-full.txt`:**
+
 ```markdown
 # docs
 
@@ -129,7 +138,7 @@ docs/
 # Use inform to crawl a site into local docs
 inform https://docs.example.com --output-dir docs
 
-# Use lift to generate LLMS artifacts from the crawled content  
+# Use lift to generate LLMS artifacts from the crawled content
 lift --input docs --output build
 ```
 
