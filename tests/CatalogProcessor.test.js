@@ -15,7 +15,7 @@ describe('CatalogProcessor', () => {
     await mkdir(testOutputDir, { recursive: true });
     // Create markdown files
     await writeFile(join(testInputDir, 'index.md'), '# Index\n---\nIndex content');
-    await writeFile(join(testInputDir, 'guide.md'), '# Guide\nGuide content');
+    await writeFile(join(testInputDir, 'catalog.md'), '# Catalog\nCatalog content');
     await writeFile(join(testInputDir, 'other.txt'), 'Not markdown');
     await mkdir(join(testInputDir, 'node_modules'), { recursive: true });
     await writeFile(join(testInputDir, 'node_modules', 'ignore.md'), '# Should be ignored');
@@ -34,9 +34,9 @@ describe('CatalogProcessor', () => {
   test('DirectoryScanner finds only markdown files and excludes patterns', async () => {
     const scanner = new DirectoryScanner();
     const files = await scanner.scanDirectory(testInputDir);
-    expect(files.length).toBe(3); // index.md, guide.md, subdir/nested.md
+    expect(files.length).toBe(3); // index.md, catalog.md, subdir/nested.md
     expect(files.some(f => f.endsWith('index.md'))).toBe(true);
-    expect(files.some(f => f.endsWith('guide.md'))).toBe(true);
+    expect(files.some(f => f.endsWith('catalog.md'))).toBe(true);
     expect(files.some(f => f.endsWith('nested.md'))).toBe(true);
     expect(files.some(f => f.includes('node_modules'))).toBe(false);
   });
