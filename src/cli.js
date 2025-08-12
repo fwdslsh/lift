@@ -51,7 +51,7 @@ Output:
   - index.json: Directory navigation and file metadata (with --generate-index)
 
 The tool follows the LLMS standard for AI-friendly documentation format.
-Document ordering: index/readme files first, then important docs (guides, tutorials), then remainder.
+Document ordering: index/readme files first, then important docs (catalogs, tutorials), then remainder.
 `);
 }
 

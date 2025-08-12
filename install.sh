@@ -33,12 +33,14 @@ DRY_RUN=false
 show_banner() {
     echo -e "${CYAN}"
     cat << 'EOF'
-     __   _   ____   ______ 
-    / /  (_) / __/  /_  __/ 
-   / /__/ / / /_     / /    
-  /____/_/ /___/    /_/     
-                            
-  Documentation Index Generator
+   ____      _        _             
+  / ___|__ _| |_ __ _| | ___   __ _ 
+ | |   / _` | __/ _` | |/ _ \ / _` |
+ | |__| (_| | || (_| | | (_) | (_| |
+  \____\__,_|\__\__,_|_|\___/ \__, |
+                              |___/ 
+
+  Documentation Catalog Generator
 EOF
     echo -e "${NC}"
 }
@@ -60,9 +62,9 @@ OPTIONS:
     --dry-run           Show what would be done without installing
 
 ENVIRONMENT VARIABLES:
-    GUIDE_INSTALL_DIR   Custom installation directory
-    GUIDE_VERSION       Specific version to install
-    GUIDE_FORCE         Force reinstall (set to any value)
+    CATALOG_INSTALL_DIR   Custom installation directory
+    CATALOG_VERSION       Specific version to install
+    CATALOG_FORCE         Force reinstall (set to any value)
 
 EXAMPLES:
     $0                           # Install latest version system-wide
@@ -389,9 +391,9 @@ parse_args() {
 # Main function
 main() {
     # Parse environment variables
-    INSTALL_DIR="${GUIDE_INSTALL_DIR:-$INSTALL_DIR}"
-    VERSION="${GUIDE_VERSION:-$VERSION}"
-    if [[ -n "${GUIDE_FORCE:-}" ]]; then
+    INSTALL_DIR="${CATALOG_INSTALL_DIR:-$INSTALL_DIR}"
+    VERSION="${CATALOG_VERSION:-$VERSION}"
+    if [[ -n "${CATALOG_FORCE:-}" ]]; then
         FORCE_INSTALL=true
     fi
     

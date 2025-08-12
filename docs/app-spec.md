@@ -1,8 +1,8 @@
-# Guide CLI Tool - Complete Application Specification
+# Catalog CLI Tool - Complete Application Specification
 
-> Guide is a lightweight, efficient CLI tool designed to scan Markdown and HTML directories and generate llms.txt (structured index) and llms-full.txt (full concatenated content) files. Additionally, it can generate index.json files for directory navigation and metadata collection. The tool supports flexible file filtering through include/exclude glob patterns and is designed for seamless integration with AI systems, documentation workflows, and the fwdslsh ecosystem following the philosophy of minimal, readable, composable tools.
+> Catalog is a lightweight, efficient CLI tool designed to scan Markdown and HTML directories and generate llms.txt (structured index) and llms-full.txt (full concatenated content) files. Additionally, it can generate index.json files for directory navigation and metadata collection. The tool supports flexible file filtering through include/exclude glob patterns and is designed for seamless integration with AI systems, documentation workflows, and the fwdslsh ecosystem following the philosophy of minimal, readable, composable tools.
 
-Guide transforms source Markdown files with YAML frontmatter into structured, AI-friendly documentation formats while optionally generating comprehensive navigation metadata, making it the perfect companion tool to [`inform`](https://github.com/fwdslsh/inform) for creating complete documentation workflows.
+Catalog transforms source Markdown files with YAML frontmatter into structured, AI-friendly documentation formats while optionally generating comprehensive navigation metadata, making it the perfect companion tool to [`inform`](https://github.com/fwdslsh/inform) for creating complete documentation workflows.
 
 ## Target Users
 
@@ -30,18 +30,18 @@ Guide transforms source Markdown files with YAML frontmatter into structured, AI
 
 ### Application Name
 
-`guide`
+`catalog`
 
 ### Main Command
 
-#### `guide` (Default Command)
+#### `catalog` (Default Command)
 
 Processes Markdown files and generates outputs.
 
 **Syntax:**
 
 ```bash
-guide [options]
+catalog [options]
 ```
 
 **Workflow:**
@@ -87,9 +87,9 @@ guide [options]
 
 - **Purpose:** Include files matching glob pattern (can be used multiple times)
 - **Default:** All supported files included
-- **Pattern Format:** Standard glob patterns (e.g., `*.md`, `docs/**/*.html`, `*guide*`)
+- **Pattern Format:** Standard glob patterns (e.g., `*.md`, `docs/**/*.html`, `*catalog*`)
 - **Behavior:** Only files matching at least one include pattern are processed
-- **Examples:** `--include "*.md"`, `--include "docs/*.html"`, `--include "**/guide*"`
+- **Examples:** `--include "*.md"`, `--include "docs/*.html"`, `--include "**/catalog*"`
 
 **`--exclude <pattern>`**
 
@@ -130,52 +130,52 @@ guide [options]
 
 ```bash
 # Process current directory
-guide
+catalog
 
 # Specify input and output directories
-guide --input docs --output build
+catalog --input docs --output build
 
 # Generate with navigation metadata
-guide --input docs --output build --generate-index
+catalog --input docs --output build --generate-index
 
 # Silent operation for automation
-guide -i docs -o build --silent
+catalog -i docs -o build --silent
 ```
 
 #### File Filtering Examples
 
 ```bash
 # Include only markdown files
-guide --include "*.md"
+catalog --include "*.md"
 
 # Include specific directories and file types
-guide --include "docs/*.md" --include "guides/*.html"
+catalog --include "docs/*.md" --include "catalogs/*.html"
 
 # Exclude draft and temporary files
-guide --exclude "*.draft.md" --exclude "temp/*"
+catalog --exclude "*.draft.md" --exclude "temp/*"
 
 # Combine include/exclude patterns
-guide --include "docs/**/*" --exclude "**/draft*" --exclude "**/temp*"
+catalog --include "docs/**/*" --exclude "**/draft*" --exclude "**/temp*"
 
-# Process only guides and tutorials
-guide --include "*guide*" --include "*tutorial*"
+# Process only catalogs and tutorials
+catalog --include "*catalog*" --include "*tutorial*"
 ```
 
 #### Advanced Workflows
 
 ```bash
 # Documentation pipeline with filtering
-guide --input documentation --output dist --include "*.md" --exclude "archive/*" --generate-index
+catalog --input documentation --output dist --include "*.md" --exclude "archive/*" --generate-index
 
 # AI training data preparation
-guide --input knowledge-base --output training-data --exclude "**/private/**" --silent
+catalog --input knowledge-base --output training-data --exclude "**/private/**" --silent
 
 # Multi-format processing
-guide --include "*.md" --include "*.html" --exclude "draft*" --output processed
+catalog --include "*.md" --include "*.html" --exclude "draft*" --output processed
 
 # Multi-project processing
 for dir in project1 project2 project3; do
-  guide --input "$dir/docs" --output "output/$dir" --generate-index
+  catalog --input "$dir/docs" --output "output/$dir" --generate-index
 done
 ```
 
@@ -187,7 +187,7 @@ The application follows SOLID design principles with clear separation of concern
 
 #### Single Responsibility Principle (SRP)
 
-- **`GuideProcessor`**: Main orchestrator coordinating workflow
+- **`CatalogProcessor`**: Main orchestrator coordinating workflow
 - **`DirectoryScanner`**: File discovery and directory traversal
 - **`MarkdownProcessor`**: Content processing and document ordering
 - **`OutputGenerator`**: llms.txt file generation
@@ -207,7 +207,7 @@ The application follows SOLID design principles with clear separation of concern
 
 ### Core Classes
 
-#### `GuideProcessor`
+#### `CatalogProcessor`
 
 **Purpose:** Main orchestrator that coordinates the entire workflow
 
@@ -283,7 +283,7 @@ The application follows SOLID design principles with clear separation of concern
 
 ### Data Flow
 
-1. **Initialization**: `GuideProcessor` creates and configures specialized components
+1. **Initialization**: `CatalogProcessor` creates and configures specialized components
 2. **Discovery**: `DirectoryScanner` finds all markdown files
 3. **Processing**: `MarkdownProcessor` reads, cleans, and orders documents
 4. **Output Generation**: `OutputGenerator` creates llms.txt files
@@ -300,7 +300,7 @@ The application follows SOLID design principles with clear separation of concern
 
 ## Core Documentation
 - [index.md](index.md)
-- [guide.md](guide.md)
+- [catalog.md](catalog.md)
 
 ## Optional
 - [misc.md](misc.md)
@@ -319,7 +319,7 @@ The application follows SOLID design principles with clear separation of concern
 
 ---
 
-## guide.md
+## catalog.md
 
 [content with frontmatter stripped]
 
@@ -345,9 +345,9 @@ The application follows SOLID design principles with clear separation of concern
   ],
   "subdirectories": [
     {
-      "name": "guides",
-      "path": "guides",
-      "indexPath": "guides/index.json"
+      "name": "catalogs",
+      "path": "catalogs",
+      "indexPath": "catalogs/index.json"
     }
   ],
   "summary": {
@@ -370,7 +370,7 @@ The application follows SOLID design principles with clear separation of concern
    - Files in subdirectories matching these patterns
 
 2. **Important Documents** (Medium Priority)
-   - Files containing: `doc`, `docs`, `guide`, `guides`
+   - Files containing: `doc`, `docs`, `catalog`, `catalogs`
    - `tutorial`, `tutorials`, `intro`, `introduction`
    - `getting-started`, `get-started`, `quickstart`, `quick-start`, `start`
 

@@ -74,7 +74,7 @@ describe('CatalogProcessor', () => {
     const docs = await processor.processFiles(files);
     const ordered = processor.orderDocuments(docs);
     expect(ordered.index.length).toBe(1); // index.md
-    expect(ordered.important.length).toBe(1); // guide.md
+    expect(ordered.important.length).toBe(1); // catalog.md
     expect(ordered.other.length).toBe(1); // subdir/nested.md
   });
 

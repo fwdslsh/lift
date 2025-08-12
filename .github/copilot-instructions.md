@@ -1,13 +1,13 @@
 # Copilot Instructions for AI Coding Agents
 
 ## Project Overview
-- **Guide** is a CLI tool for scanning Markdown directories and generating two outputs:
+- **Catalog** is a CLI tool for scanning Markdown directories and generating two outputs:
   - `llms.txt`: Structured index of docs
   - `llms-full.txt`: Full concatenated content
 - Designed for seamless integration with [`inform`](https://github.com/fwdslsh/inform) and follows the fwdslsh philosophy: minimal, readable, composable tools.
 
 ## Architecture & Key Files
-- Main logic: `src/GuideProcessor.js`
+- Main logic: `src/CatalogProcessor.js`
 - CLI entry: `src/cli.js`
 - Tests: `tests/` (unit tests for CLI and processor)
 - Example docs: `tests/fixtures/test-docs/`
@@ -17,24 +17,24 @@
 - Strips YAML frontmatter from docs
 - Orders files:
   1. Index/home files (`index.md`, `readme.md`, `home.md`)
-  2. Important docs (`guide`, `tutorial`, `getting-started`, etc.)
+  2. Important docs (`catalog`, `tutorial`, `getting-started`, etc.)
   3. Remaining files alphabetically
 - Generates outputs with relative links and clear sectioning
 
 ## Developer Workflows
 - **Run CLI:**
-  - `bun src/cli.js --help` (or `guide --help` if installed globally)
+  - `bun src/cli.js --help` (or `catalog --help` if installed globally)
   - Use flags: `--input`, `--output`, `--silent`, `--help`, `--version`
 - **Development mode:**
   - `bun --watch src/cli.js`
 - **Testing:**
   - Tests in `tests/` (run with Bun)
 - **Integration:**
-  - Use with `inform` to crawl docs, then run `guide` to process
+  - Use with `inform` to crawl docs, then run `catalog` to process
 
 ## Project-Specific Patterns
 - Output files (`llms.txt`, `llms-full.txt`) follow strict structure for downstream AI consumption
-- Document ordering logic is critical—see `GuideProcessor.js` for implementation
+- Document ordering logic is critical—see `CatalogProcessor.js` for implementation
 - All links in outputs are relative and markdown-formatted
 - YAML frontmatter is always stripped before processing
 
@@ -44,12 +44,12 @@
 
 ## Example Usage
 ```bash
-guide --input docs --output build
+catalog --input docs --output build
 ```
 
 ## References
 - See `README.md` for philosophy, usage, and integration details
-- See `src/GuideProcessor.js` for document ordering and output logic
+- See `src/CatalogProcessor.js` for document ordering and output logic
 - See `tests/` for test patterns and fixtures
 
 ---

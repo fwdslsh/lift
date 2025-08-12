@@ -100,7 +100,7 @@ export class MarkdownProcessor {
   }
 
   /**
-   * Check if a document is important (guides, tutorials, docs)
+   * Check if a document is important (catalogs, tutorials, docs)
    */
   isImportantDocument(path) {
     const lower = path.toLowerCase();

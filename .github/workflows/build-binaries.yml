@@ -21,7 +21,7 @@ on:
         default: true
         type: boolean
 env:
-  PROJECT_NAME: guide
+  PROJECT_NAME: catalog
   CLI_ENTRYPOINT: src/cli.js
 
 jobs:
