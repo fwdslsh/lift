@@ -28,8 +28,8 @@ describe('OutputGenerator', () => {
       ],
       important: [
         {
-          relativePath: 'guide.md',
-          content: '# Guide\nThis is the guide.'
+          relativePath: 'catalog.md',
+          content: '# Catalog\nThis is the catalog.'
         },
         {
           relativePath: 'tutorial.md',
@@ -98,7 +98,7 @@ describe('OutputGenerator', () => {
     // Check file links
     expect(content).toContain('- [index.md](index.md)');
     expect(content).toContain('- [readme.md](readme.md)');
-    expect(content).toContain('- [guide.md](guide.md)');
+    expect(content).toContain('- [catalog.md](catalog.md)');
     expect(content).toContain('- [tutorial.md](tutorial.md)');
     expect(content).toContain('- [api/reference.md](api/reference.md)');
     expect(content).toContain('- [misc.md](misc.md)');
@@ -118,14 +118,14 @@ describe('OutputGenerator', () => {
     // Check all content is included
     expect(content).toContain('This is the index page.');
     expect(content).toContain('This is the readme file.');
-    expect(content).toContain('This is the guide.');
+    expect(content).toContain('This is the catalog.');
     expect(content).toContain('This is the tutorial.');
     expect(content).toContain('API documentation.');
     expect(content).toContain('Other content.');
     
     // Check file section headers
     expect(content).toContain('## index.md');
-    expect(content).toContain('## guide.md');
+    expect(content).toContain('## catalog.md');
     expect(content).toContain('## api/reference.md');
   });
 

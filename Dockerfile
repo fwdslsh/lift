@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for Guide CLI
+# Multi-stage Dockerfile for Catalog CLI
 # Uses Ubuntu for glibc compatibility with Bun executables
 
 # Build stage
@@ -30,11 +30,11 @@ RUN bun install --frozen-lockfile
 RUN bun test
 
 # Build the binary using Bun
-RUN bun build src/cli.js --compile --outfile /usr/local/bin/guide && \
-    chmod +x /usr/local/bin/guide
+RUN bun build src/cli.js --compile --outfile /usr/local/bin/catalog && \
+    chmod +x /usr/local/bin/catalog
 
 # Verify the binary works
-RUN /usr/local/bin/guide --version
+RUN /usr/local/bin/catalog --version
 
 # Runtime stage
 FROM ubuntu:latest
@@ -50,7 +50,7 @@ RUN groupadd -g 1001 appgroup && \
     useradd -u 1001 -g appgroup -m -s /bin/bash appuser
 
 # Copy the binary from builder stage
-COPY --from=builder /usr/local/bin/guide /usr/local/bin/guide
+COPY --from=builder /usr/local/bin/catalog /usr/local/bin/catalog
 
 # Create working directory and set permissions
 WORKDIR /workspace
@@ -60,13 +60,13 @@ RUN chown appuser:appgroup /workspace
 USER appuser
 
 # Add metadata labels
-LABEL org.opencontainers.image.title="Guide CLI" \
+LABEL org.opencontainers.image.title="Catalog CLI" \
       org.opencontainers.image.description="Lightweight CLI that scans Markdown directories to generate llms.txt and index.json files" \
-      org.opencontainers.image.url="https://github.com/fwdslsh/guide" \
-      org.opencontainers.image.source="https://github.com/fwdslsh/guide" \
+      org.opencontainers.image.url="https://github.com/fwdslsh/catalog" \
+      org.opencontainers.image.source="https://github.com/fwdslsh/catalog" \
       org.opencontainers.image.vendor="fwdslsh" \
       org.opencontainers.image.licenses="CC-BY-4.0"
 
 # Set default entrypoint and command
-ENTRYPOINT ["guide"]
+ENTRYPOINT ["catalog"]
 CMD ["--help"]

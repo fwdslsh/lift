@@ -105,7 +105,7 @@ export class MarkdownProcessor {
   isImportantDocument(path) {
     const lower = path.toLowerCase();
     const importantPatterns = [
-      'doc', 'docs', 'guide', 'guides', 'tutorial', 'tutorials',
+      'doc', 'docs', 'catalog', 'catalogs', 'tutorial', 'tutorials',
       'intro', 'introduction', 'getting-started', 'get-started',
       'quickstart', 'quick-start', 'start'
     ];

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Guide Installation Script
-# This script downloads and installs the latest guide binary from GitHub releases
+# Catalog Installation Script
+# This script downloads and installs the latest catalog binary from GitHub releases
 # Supports Linux, macOS, and Windows across x86_64 and arm64 architectures
 
 set -e
@@ -16,9 +16,9 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Configuration
-PROJECT_NAME="guide"
+PROJECT_NAME="catalog"
 REPO_OWNER="fwdslsh"
-REPO_NAME="guide"
+REPO_NAME="catalog"
 GITHUB_API_URL="https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}"
 GITHUB_RELEASES_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases"
 
@@ -46,7 +46,7 @@ EOF
 # Help function
 show_help() {
     cat << EOF
-Guide Installation Script
+Catalog Installation Script
 
 USAGE:
     $0 [OPTIONS]
@@ -221,7 +221,7 @@ setup_install_dir() {
     fi
 }
 
-# Check if guide is already installed
+# Check if catalog is already installed
 check_existing_installation() {
     local existing_path
     existing_path=$(command -v "$PROJECT_NAME" 2>/dev/null || true)
@@ -233,7 +233,7 @@ check_existing_installation() {
         log_info "Found existing installation: $existing_path (version: $existing_version)"
         
         if [[ "$FORCE_INSTALL" == "false" ]]; then
-            log_warn "Guide is already installed. Use --force to reinstall."
+            log_warn "Catalog is already installed. Use --force to reinstall."
             exit 0
         else
             log_info "Force install enabled, proceeding with installation..."
@@ -270,7 +270,7 @@ verify_path() {
 }
 
 # Main installation function
-install_guide() {
+install_catalog() {
     local platform
     local binary_name
     local download_url
@@ -407,7 +407,7 @@ main() {
     check_existing_installation
     
     # Install
-    install_guide
+    install_catalog
     
     # Post-installation
     if [[ "$DRY_RUN" == "false" ]]; then

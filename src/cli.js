@@ -1,16 +1,16 @@
 #!/usr/bin/env bun
 
-import { GuideProcessor } from './GuideProcessor.js';
+import { CatalogProcessor } from './CatalogProcessor.js';
 
 // Version is embedded at build time or taken from package.json in development
-const VERSION = process.env.GUIDE_VERSION || '0.0.1';
+const VERSION = process.env.CATALOG_VERSION || '0.0.1';
 
 function showHelp() {
   console.log(`
-Guide - Generate llms.txt from a directory of markdown and HTML files
+Catalog - Generate llms.txt from a directory of markdown and HTML files
 
 Usage:
-  guide [options]
+  catalog [options]
 
 Options:
   --input, -i <path>     Source directory of Markdown/HTML files (default: current directory)
@@ -24,22 +24,22 @@ Options:
 
 Examples:
   # Default (current directory)
-  guide
+  catalog
 
   # Specify input and output directories
-  guide --input docs --output build
+  catalog --input docs --output build
 
   # Include only specific patterns
-  guide --include "*.md" --include "guide/*.html"
+  catalog --include "*.md" --include "catalog/*.html"
 
   # Exclude specific patterns
-  guide --exclude "*.draft.md" --exclude "temp/*"
+  catalog --exclude "*.draft.md" --exclude "temp/*"
 
   # Combine include/exclude with other options
-  guide -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
+  catalog -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
 
   # Silent mode
-  guide -i docs -o build --silent
+  catalog -i docs -o build --silent
 
 File Types:
   - Markdown files (.md, .mdx)
@@ -146,7 +146,7 @@ async function main() {
   try {
     const options = parseArgs();
     
-    const processor = new GuideProcessor(options.input, options.output, {
+    const processor = new CatalogProcessor(options.input, options.output, {
       silent: options.silent,
       generateIndex: options.generateIndex,
       includeGlobs: options.includeGlobs,
