@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Lift Installation Script
-# This script downloads and installs the latest lift binary from GitHub releases
+# Catalog Installation Script
+# This script downloads and installs the latest catalog binary from GitHub releases
 # Supports Linux, macOS, and Windows across x86_64 and arm64 architectures
 
 set -e
@@ -16,9 +16,9 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Configuration
-PROJECT_NAME="lift"
+PROJECT_NAME="catalog"
 REPO_OWNER="fwdslsh"
-REPO_NAME="lift"
+REPO_NAME="catalog"
 GITHUB_API_URL="https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}"
 GITHUB_RELEASES_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases"
 
@@ -46,7 +46,7 @@ EOF
 # Help function
 show_help() {
     cat << EOF
-Lift Installation Script
+Catalog Installation Script
 
 USAGE:
     $0 [OPTIONS]
@@ -60,9 +60,9 @@ OPTIONS:
     --dry-run           Show what would be done without installing
 
 ENVIRONMENT VARIABLES:
-    LIFT_INSTALL_DIR    Custom installation directory
-    LIFT_VERSION        Specific version to install
-    LIFT_FORCE          Force reinstall (set to any value)
+    GUIDE_INSTALL_DIR   Custom installation directory
+    GUIDE_VERSION       Specific version to install
+    GUIDE_FORCE         Force reinstall (set to any value)
 
 EXAMPLES:
     $0                           # Install latest version system-wide
@@ -221,7 +221,7 @@ setup_install_dir() {
     fi
 }
 
-# Check if lift is already installed
+# Check if catalog is already installed
 check_existing_installation() {
     local existing_path
     existing_path=$(command -v "$PROJECT_NAME" 2>/dev/null || true)
@@ -233,7 +233,7 @@ check_existing_installation() {
         log_info "Found existing installation: $existing_path (version: $existing_version)"
         
         if [[ "$FORCE_INSTALL" == "false" ]]; then
-            log_warn "Lift is already installed. Use --force to reinstall."
+            log_warn "Catalog is already installed. Use --force to reinstall."
             exit 0
         else
             log_info "Force install enabled, proceeding with installation..."
@@ -270,7 +270,7 @@ verify_path() {
 }
 
 # Main installation function
-install_lift() {
+install_catalog() {
     local platform
     local binary_name
     local download_url
@@ -389,9 +389,9 @@ parse_args() {
 # Main function
 main() {
     # Parse environment variables
-    INSTALL_DIR="${LIFT_INSTALL_DIR:-$INSTALL_DIR}"
-    VERSION="${LIFT_VERSION:-$VERSION}"
-    if [[ -n "${LIFT_FORCE:-}" ]]; then
+    INSTALL_DIR="${GUIDE_INSTALL_DIR:-$INSTALL_DIR}"
+    VERSION="${GUIDE_VERSION:-$VERSION}"
+    if [[ -n "${GUIDE_FORCE:-}" ]]; then
         FORCE_INSTALL=true
     fi
     
@@ -407,7 +407,7 @@ main() {
     check_existing_installation
     
     # Install
-    install_lift
+    install_catalog
     
     # Post-installation
     if [[ "$DRY_RUN" == "false" ]]; then

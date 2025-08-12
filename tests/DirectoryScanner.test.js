@@ -13,7 +13,7 @@ describe('DirectoryScanner', () => {
     
     // Create various file types
     await writeFile(join(testDir, 'readme.md'), '# Readme');
-    await writeFile(join(testDir, 'guide.mdx'), '# Guide');
+    await writeFile(join(testDir, 'catalog.mdx'), '# Catalog');
     await writeFile(join(testDir, 'config.txt'), 'config content');
     await writeFile(join(testDir, 'node_modules', 'package.md'), '# Should be excluded');
     await writeFile(join(testDir, '.git', 'config'), 'git config');
@@ -83,7 +83,7 @@ describe('DirectoryScanner', () => {
     
     // Should find markdown files
     expect(files.some(f => f.endsWith('readme.md'))).toBe(true);
-    expect(files.some(f => f.endsWith('guide.mdx'))).toBe(true);
+    expect(files.some(f => f.endsWith('catalog.mdx'))).toBe(true);
     expect(files.some(f => f.endsWith('nested.md'))).toBe(true);
     
     // Should exclude non-markdown files
@@ -136,9 +136,9 @@ describe('DirectoryScanner', () => {
     });
     
     expect(scanner.matchesGlobs('test.md')).toBe(true);
-    expect(scanner.matchesGlobs('docs/guide.html')).toBe(true);
+    expect(scanner.matchesGlobs('docs/catalog.html')).toBe(true);
     expect(scanner.matchesGlobs('test.txt')).toBe(false);
-    expect(scanner.matchesGlobs('other/guide.html')).toBe(false);
+    expect(scanner.matchesGlobs('other/catalog.html')).toBe(false);
   });
 
   test('matchesGlobs works with exclude patterns', () => {
@@ -160,7 +160,7 @@ describe('DirectoryScanner', () => {
     });
     
     expect(scanner.matchesGlobs('test.md')).toBe(true);
-    expect(scanner.matchesGlobs('guide.html')).toBe(true);
+    expect(scanner.matchesGlobs('catalog.html')).toBe(true);
     expect(scanner.matchesGlobs('test.txt')).toBe(false); // not included
     expect(scanner.matchesGlobs('draft.md')).toBe(false); // excluded
     expect(scanner.matchesGlobs('temp/file.html')).toBe(false); // excluded

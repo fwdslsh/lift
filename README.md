@@ -1,56 +1,56 @@
-# Lift
+# Catalog
 
 A lightweight CLI that scans a directory of Markdown and HTML files to generate `llms.txt` (structured index) and `llms-full.txt` (full content), designed to integrate seamlessly with `inform` and follow the fwdslsh philosophy.
 
 ## Philosophy
 
-**Lift** embodies the fwdslsh ethos: minimal, readable, and effective. It bridges crawling (via `inform`) to AI-generated documentation formats (`llms.txt`), using familiar, easy-to-understand CLI patterns.
+**Catalog** embodies the fwdslsh ethos: minimal, readable, and effective. It bridges crawling (via `inform`) to AI-generated documentation formats (`llms.txt`), using familiar, easy-to-understand CLI patterns.
 
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/fwdslsh/lift/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/fwdslsh/catalog/main/install.sh | sh
 ```
 
 ### Manual Downloads
 
-Download pre-built binaries from [GitHub Releases](https://github.com/fwdslsh/lift/releases).
+Download pre-built binaries from [GitHub Releases](https://github.com/fwdslsh/catalog/releases).
 
 ### Docker
 
 ```bash
-docker run fwdslsh/lift:latest --help
+docker run fwdslsh/catalog:latest --help
 ```
 
 ## Usage
 
 ```bash
 # Default (scan current directory, output to current directory)
-lift
+catalog
 
 # Specify input and output directories
-lift --input docs --output build
+catalog --input docs --output build
 
 # Use short flags
-lift -i docs -o build
+catalog -i docs -o build
 
 # Include only specific file patterns
-lift --include "*.md" --include "guide/*.html"
+catalog --include "*.md" --include "catalog/*.html"
 
 # Exclude specific patterns  
-lift --exclude "*.draft.md" --exclude "temp/*"
+catalog --exclude "*.draft.md" --exclude "temp/*"
 
 # Combine include/exclude with other options
-lift -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
+catalog -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
 
 # Silent mode (suppress non-error output)
-lift --input docs --output build --silent
+catalog --input docs --output build --silent
 
 # Show help
-lift --help
+catalog --help
 
 # Show version
-lift --version
+catalog --version
 ```
 
 ## Flags
@@ -77,34 +77,34 @@ lift --version
 **Include patterns** (whitelist specific files):
 ```bash
 # Include only markdown files
-lift --include "*.md"
+catalog --include "*.md"
 
 # Include specific directories and file types
-lift --include "docs/*.md" --include "guides/*.html"
+catalog --include "docs/*.md" --include "catalogs/*.html"
 
 # Include files with specific naming patterns
-lift --include "*guide*" --include "*tutorial*"
+catalog --include "*catalog*" --include "*tutorial*"
 ```
 
 **Exclude patterns** (blacklist specific files):
 ```bash
 # Exclude draft files
-lift --exclude "*.draft.md" --exclude "*draft*"
+catalog --exclude "*.draft.md" --exclude "*draft*"
 
 # Exclude temporary directories
-lift --exclude "temp/*" --exclude "backup/*"
+catalog --exclude "temp/*" --exclude "backup/*"
 
 # Exclude specific file patterns
-lift --exclude "**/*test*" --exclude "**/*.bak"
+catalog --exclude "**/*test*" --exclude "**/*.bak"
 ```
 
 **Combining patterns**:
 ```bash
 # Include all docs but exclude drafts
-lift --include "docs/**/*" --exclude "**/draft*"
+catalog --include "docs/**/*" --exclude "**/draft*"
 
 # Process only markdown, exclude specific directories
-lift --include "*.md" --exclude "archive/*" --exclude "deprecated/*"
+catalog --include "*.md" --exclude "archive/*" --exclude "deprecated/*"
 ```
 
 ### Document Processing
@@ -112,7 +112,7 @@ lift --include "*.md" --exclude "archive/*" --exclude "deprecated/*"
 - Strips YAML frontmatter from files (both Markdown and HTML)
 - Orders documents intelligently:
   1. **Index/home files first**: `index.md`, `index.html`, `readme.md`, `readme.html`, `home.md`, `home.html` (prioritized by name)
-  2. **Important documentation**: Files containing `doc`, `guide`, `tutorial`, `intro`, `getting-started`, etc.
+  2. **Important documentation**: Files containing `doc`, `catalog`, `tutorial`, `intro`, `getting-started`, etc.
   3. **Remaining files**: Alphabetically sorted
 
 ### Output Generation
@@ -134,7 +134,7 @@ lift --include "*.md" --exclude "archive/*" --exclude "deprecated/*"
 
 #### `index.json` Files (Directory Navigation)
 
-When the `--generate-index` flag is used, Lift generates comprehensive directory navigation files:
+When the `--generate-index` flag is used, Catalog generates comprehensive directory navigation files:
 
 - **`index.json`** in each directory: Contains metadata for all files and subdirectories
 - **`master-index.json`** at output root: Aggregates project-wide statistics and directory navigation
@@ -184,7 +184,7 @@ For a directory structure like:
 ```
 docs/
 ├── index.md
-├── guide/
+├── catalog/
 │   └── getting-started.md
 ├── api/
 │   └── reference.md
@@ -201,7 +201,7 @@ docs/
 ## Core Documentation
 
 - [index.md](index.md)
-- [guide/getting-started.md](guide/getting-started.md)
+- [catalog/getting-started.md](catalog/getting-started.md)
 
 ## Optional
 
@@ -222,7 +222,7 @@ docs/
 
 ---
 
-## guide/getting-started.md
+## catalog/getting-started.md
 
 [Full content with YAML frontmatter stripped]
 
@@ -259,9 +259,9 @@ docs/
   ],
   "subdirectories": [
     {
-      "name": "guide",
-      "path": "guide", 
-      "indexPath": "guide/index.json"
+      "name": "catalog",
+      "path": "catalog", 
+      "indexPath": "catalog/index.json"
     },
     {
       "name": "api",
@@ -280,11 +280,11 @@ docs/
 
 ## Architecture
 
-Lift follows SOLID design principles with a modular, extensible architecture:
+Catalog follows SOLID design principles with a modular, extensible architecture:
 
 ### Core Components
 
-- **`LiftProcessor`**: Main orchestrator that coordinates the workflow
+- **`CatalogProcessor`**: Main orchestrator that coordinates the workflow
 - **`DirectoryScanner`**: Handles file discovery and directory traversal
 - **`MarkdownProcessor`**: Processes markdown content and applies document ordering
 - **`OutputGenerator`**: Creates llms.txt output files
@@ -299,7 +299,7 @@ Lift follows SOLID design principles with a modular, extensible architecture:
 
 ### Workflow
 
-1. `LiftProcessor` initializes and configures specialized components
+1. `CatalogProcessor` initializes and configures specialized components
 2. `DirectoryScanner` discovers all markdown files in the input directory
 3. `MarkdownProcessor` reads, cleans, and orders documents by importance
 4. `OutputGenerator` creates the llms.txt and llms-full.txt files
@@ -309,17 +309,17 @@ For detailed technical specifications, see the [App Spec](docs/app-spec.md).
 
 ## Integration with `inform`
 
-**Lift** is designed to work seamlessly with [`inform`](https://github.com/fwdslsh/inform):
+**Catalog** is designed to work seamlessly with [`inform`](https://github.com/fwdslsh/inform):
 
 ```bash
 # Use inform to crawl a site into local docs
 inform https://docs.example.com --output-dir docs
 
-# Use lift to generate LLMS artifacts from the crawled content
-lift --input docs --output build
+# Use catalog to generate LLMS artifacts from the crawled content
+catalog --input docs --output build
 
 # Generate with directory index files for navigation
-lift --input docs --output build --generate-index
+catalog --input docs --output build --generate-index
 ```
 
 This composable approach follows the fwdslsh philosophy of minimal, focused tools that work well together.

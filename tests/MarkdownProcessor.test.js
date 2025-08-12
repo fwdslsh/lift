@@ -11,7 +11,7 @@ describe('MarkdownProcessor', () => {
     // Create test markdown files with various content
     await writeFile(join(testDir, 'index.md'), '---\ntitle: Index\ndate: 2023-01-01\n---\n\n# Index\nIndex content');
     await writeFile(join(testDir, 'readme.md'), '# Readme\nReadme content');
-    await writeFile(join(testDir, 'guide.md'), '# Guide\nGuide content');
+    await writeFile(join(testDir, 'catalog.md'), '# Catalog\nCatalog content');
     await writeFile(join(testDir, 'tutorial.md'), '---\nauthor: Test\n---\n# Tutorial\nTutorial content');
     await writeFile(join(testDir, 'getting-started.md'), '# Getting Started\nGetting started content');
     await writeFile(join(testDir, 'reference.md'), '# Reference\nReference content');
@@ -118,14 +118,14 @@ describe('MarkdownProcessor', () => {
     expect(processor.isIndexDocument('README.MD')).toBe(true);
     expect(processor.isIndexDocument('home.md')).toBe(true);
     expect(processor.isIndexDocument('Home.mdx')).toBe(true);
-    expect(processor.isIndexDocument('guide.md')).toBe(false);
+    expect(processor.isIndexDocument('catalog.md')).toBe(false);
     expect(processor.isIndexDocument('tutorial.md')).toBe(false);
   });
 
   test('isImportantDocument identifies important files correctly', () => {
     const processor = new MarkdownProcessor(testDir);
     
-    expect(processor.isImportantDocument('guide.md')).toBe(true);
+    expect(processor.isImportantDocument('catalog.md')).toBe(true);
     expect(processor.isImportantDocument('tutorial.md')).toBe(true);
     expect(processor.isImportantDocument('getting-started.md')).toBe(true);
     expect(processor.isImportantDocument('GETTING-STARTED.MDX')).toBe(true);
@@ -146,7 +146,7 @@ describe('MarkdownProcessor', () => {
     const files = [
       join(testDir, 'index.md'),
       join(testDir, 'readme.md'),
-      join(testDir, 'guide.md'),
+      join(testDir, 'catalog.md'),
       join(testDir, 'tutorial.md'),
       join(testDir, 'getting-started.md'),
       join(testDir, 'reference.md'),
@@ -162,8 +162,8 @@ describe('MarkdownProcessor', () => {
     expect(ordered.index.some(doc => doc.relativePath === 'readme.md')).toBe(true);
     
     // Check important category
-    expect(ordered.important).toHaveLength(3); // guide.md, tutorial.md, getting-started.md
-    expect(ordered.important.some(doc => doc.relativePath === 'guide.md')).toBe(true);
+    expect(ordered.important).toHaveLength(3); // catalog.md, tutorial.md, getting-started.md
+    expect(ordered.important.some(doc => doc.relativePath === 'catalog.md')).toBe(true);
     expect(ordered.important.some(doc => doc.relativePath === 'tutorial.md')).toBe(true);
     expect(ordered.important.some(doc => doc.relativePath === 'getting-started.md')).toBe(true);
     
@@ -179,14 +179,14 @@ describe('MarkdownProcessor', () => {
       join(testDir, 'other.md'),
       join(testDir, 'reference.md'),
       join(testDir, 'tutorial.md'),
-      join(testDir, 'guide.md')
+      join(testDir, 'catalog.md')
     ];
     
     const documents = await processor.processFiles(files);
     const ordered = processor.orderDocuments(documents);
     
     // Important files should be sorted alphabetically
-    expect(ordered.important[0].relativePath).toBe('guide.md');
+    expect(ordered.important[0].relativePath).toBe('catalog.md');
     expect(ordered.important[1].relativePath).toBe('tutorial.md');
     
     // Other files should be sorted alphabetically
@@ -226,7 +226,7 @@ describe('MarkdownProcessor', () => {
     expect(processor.isIndexDocument('readme.html')).toBe(true);
     expect(processor.isIndexDocument('home.html')).toBe(true);
     expect(processor.isIndexDocument('docs/index.html')).toBe(true);
-    expect(processor.isIndexDocument('guide.html')).toBe(false);
+    expect(processor.isIndexDocument('catalog.html')).toBe(false);
   });
 
   test('getIndexPriority handles HTML files correctly', () => {

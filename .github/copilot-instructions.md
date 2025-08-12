@@ -1,13 +1,13 @@
 # Copilot Instructions for AI Coding Agents
 
 ## Project Overview
-- **Lift** is a CLI tool for scanning Markdown directories and generating two outputs:
+- **Guide** is a CLI tool for scanning Markdown directories and generating two outputs:
   - `llms.txt`: Structured index of docs
   - `llms-full.txt`: Full concatenated content
 - Designed for seamless integration with [`inform`](https://github.com/fwdslsh/inform) and follows the fwdslsh philosophy: minimal, readable, composable tools.
 
 ## Architecture & Key Files
-- Main logic: `src/LiftProcessor.js`
+- Main logic: `src/GuideProcessor.js`
 - CLI entry: `src/cli.js`
 - Tests: `tests/` (unit tests for CLI and processor)
 - Example docs: `tests/fixtures/test-docs/`
@@ -23,18 +23,18 @@
 
 ## Developer Workflows
 - **Run CLI:**
-  - `bun src/cli.js --help` (or `lift --help` if installed globally)
+  - `bun src/cli.js --help` (or `guide --help` if installed globally)
   - Use flags: `--input`, `--output`, `--silent`, `--help`, `--version`
 - **Development mode:**
   - `bun --watch src/cli.js`
 - **Testing:**
   - Tests in `tests/` (run with Bun)
 - **Integration:**
-  - Use with `inform` to crawl docs, then run `lift` to process
+  - Use with `inform` to crawl docs, then run `guide` to process
 
 ## Project-Specific Patterns
 - Output files (`llms.txt`, `llms-full.txt`) follow strict structure for downstream AI consumption
-- Document ordering logic is critical—see `LiftProcessor.js` for implementation
+- Document ordering logic is critical—see `GuideProcessor.js` for implementation
 - All links in outputs are relative and markdown-formatted
 - YAML frontmatter is always stripped before processing
 
@@ -44,12 +44,12 @@
 
 ## Example Usage
 ```bash
-lift --input docs --output build
+guide --input docs --output build
 ```
 
 ## References
 - See `README.md` for philosophy, usage, and integration details
-- See `src/LiftProcessor.js` for document ordering and output logic
+- See `src/GuideProcessor.js` for document ordering and output logic
 - See `tests/` for test patterns and fixtures
 
 ---

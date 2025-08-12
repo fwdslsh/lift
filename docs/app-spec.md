@@ -1,8 +1,8 @@
-# Lift CLI Tool - Complete Application Specification
+# Guide CLI Tool - Complete Application Specification
 
-## Overview
+> Guide is a lightweight, efficient CLI tool designed to scan Markdown and HTML directories and generate llms.txt (structured index) and llms-full.txt (full concatenated content) files. Additionally, it can generate index.json files for directory navigation and metadata collection. The tool supports flexible file filtering through include/exclude glob patterns and is designed for seamless integration with AI systems, documentation workflows, and the fwdslsh ecosystem following the philosophy of minimal, readable, composable tools.
 
-Lift is a lightweight, efficient CLI tool designed to scan Markdown and HTML directories and generate two primary outputs: `llms.txt` (structured index) and `llms-full.txt` (full concatenated content). Additionally, it can generate `index.json` files for directory navigation and metadata collection. The tool supports flexible file filtering through include/exclude glob patterns and is designed for seamless integration with AI systems, documentation workflows, and the fwdslsh ecosystem following the philosophy of minimal, readable, composable tools.
+Guide transforms source Markdown files with YAML frontmatter into structured, AI-friendly documentation formats while optionally generating comprehensive navigation metadata, making it the perfect companion tool to [`inform`](https://github.com/fwdslsh/inform) for creating complete documentation workflows.
 
 ## Target Users
 
@@ -12,13 +12,7 @@ Lift is a lightweight, efficient CLI tool designed to scan Markdown and HTML dir
 - **Developers** integrating with documentation toolchains requiring programmatic navigation
 - **Technical Writers** who need to generate consolidated documentation views
 
-## Core Functionality
-
-### Primary Purpose
-
-Transform source Markdown files with YAML frontmatter into structured, AI-friendly documentation formats while optionally generating comprehensive navigation metadata.
-
-### Key Features
+## Core Features
 
 - **Recursive Markdown and HTML Scanning**: Discovers `.md`, `.mdx`, and `.html` files across directory structures
 - **Flexible File Filtering**: Include/exclude glob patterns for precise file selection
@@ -26,9 +20,6 @@ Transform source Markdown files with YAML frontmatter into structured, AI-friend
 - **Intelligent Document Ordering**: Prioritizes index/readme files, important documentation, then alphabetical order
 - **Dual Output Generation**: Creates both structured index and full content files
 - **Optional Directory Navigation**: Generates JSON metadata for programmatic navigation
-
-### Additional Features
-
 - **Configurable Exclusion Patterns**: Automatically excludes common build artifacts and dependencies
 - **Relative Link Preservation**: Maintains proper markdown linking in outputs
 - **Project-wide Metadata Collection**: Aggregates statistics and file information
@@ -39,18 +30,18 @@ Transform source Markdown files with YAML frontmatter into structured, AI-friend
 
 ### Application Name
 
-`lift`
+`guide`
 
 ### Main Command
 
-#### `lift` (Default Command)
+#### `guide` (Default Command)
 
 Processes Markdown files and generates outputs.
 
 **Syntax:**
 
 ```bash
-lift [options]
+guide [options]
 ```
 
 **Workflow:**
@@ -139,53 +130,52 @@ lift [options]
 
 ```bash
 # Process current directory
-lift
+guide
 
 # Specify input and output directories
-lift --input docs --output build
+guide --input docs --output build
 
 # Generate with navigation metadata
-lift --input docs --output build --generate-index
+guide --input docs --output build --generate-index
 
 # Silent operation for automation
-lift -i docs -o build --silent
+guide -i docs -o build --silent
 ```
 
 #### File Filtering Examples
 
 ```bash
 # Include only markdown files
-lift --include "*.md"
+guide --include "*.md"
 
 # Include specific directories and file types
-lift --include "docs/*.md" --include "guides/*.html"
+guide --include "docs/*.md" --include "guides/*.html"
 
 # Exclude draft and temporary files
-lift --exclude "*.draft.md" --exclude "temp/*"
+guide --exclude "*.draft.md" --exclude "temp/*"
 
 # Combine include/exclude patterns
-lift --include "docs/**/*" --exclude "**/draft*" --exclude "**/temp*"
+guide --include "docs/**/*" --exclude "**/draft*" --exclude "**/temp*"
 
 # Process only guides and tutorials
-lift --include "*guide*" --include "*tutorial*"
+guide --include "*guide*" --include "*tutorial*"
 ```
 
 #### Advanced Workflows
 
 ```bash
 # Documentation pipeline with filtering
-lift --input documentation --output dist --include "*.md" --exclude "archive/*" --generate-index
+guide --input documentation --output dist --include "*.md" --exclude "archive/*" --generate-index
 
 # AI training data preparation
-lift --input knowledge-base --output training-data --exclude "**/private/**" --silent
+guide --input knowledge-base --output training-data --exclude "**/private/**" --silent
 
 # Multi-format processing
-lift --include "*.md" --include "*.html" --exclude "draft*" --output processed
-lift --input knowledge-base --output training-data --silent
+guide --include "*.md" --include "*.html" --exclude "draft*" --output processed
 
 # Multi-project processing
 for dir in project1 project2 project3; do
-  lift --input "$dir/docs" --output "output/$dir" --generate-index
+  guide --input "$dir/docs" --output "output/$dir" --generate-index
 done
 ```
 
@@ -197,7 +187,7 @@ The application follows SOLID design principles with clear separation of concern
 
 #### Single Responsibility Principle (SRP)
 
-- **`LiftProcessor`**: Main orchestrator coordinating workflow
+- **`GuideProcessor`**: Main orchestrator coordinating workflow
 - **`DirectoryScanner`**: File discovery and directory traversal
 - **`MarkdownProcessor`**: Content processing and document ordering
 - **`OutputGenerator`**: llms.txt file generation
@@ -217,7 +207,7 @@ The application follows SOLID design principles with clear separation of concern
 
 ### Core Classes
 
-#### `LiftProcessor`
+#### `GuideProcessor`
 
 **Purpose:** Main orchestrator that coordinates the entire workflow
 
@@ -293,7 +283,7 @@ The application follows SOLID design principles with clear separation of concern
 
 ### Data Flow
 
-1. **Initialization**: `LiftProcessor` creates and configures specialized components
+1. **Initialization**: `GuideProcessor` creates and configures specialized components
 2. **Discovery**: `DirectoryScanner` finds all markdown files
 3. **Processing**: `MarkdownProcessor` reads, cleans, and orders documents
 4. **Output Generation**: `OutputGenerator` creates llms.txt files

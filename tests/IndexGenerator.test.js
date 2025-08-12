@@ -18,7 +18,7 @@ describe('IndexGenerator', () => {
     
     // Create test files
     await writeFile(join(testInputDir, 'readme.md'), '# Readme\nReadme content');
-    await writeFile(join(testInputDir, 'guide.md'), '# Guide\nGuide content');
+    await writeFile(join(testInputDir, 'catalog.md'), '# Catalog\nCatalog content');
     await writeFile(join(testInputDir, 'config.json'), '{"test": true}');
     await writeFile(join(testInputDir, 'subdir', 'nested.md'), '# Nested\nNested content');
     await writeFile(join(testInputDir, 'subdir', 'data.txt'), 'text content');
@@ -228,7 +228,7 @@ describe('IndexGenerator', () => {
 
   test('generateAll with custom exclude function', async () => {
     const customShouldExclude = (pattern, fullPath) => {
-      return fullPath.includes('guide'); // Exclude files/dirs with 'guide' in path
+      return fullPath.includes('catalog'); // Exclude files/dirs with 'catalog' in path
     };
     
     const generator = new IndexGenerator(testInputDir, testOutputDir, {
@@ -239,9 +239,9 @@ describe('IndexGenerator', () => {
     
     const indexContent = JSON.parse(await readFile(join(testOutputDir, 'index.json'), 'utf8'));
     
-    // Should not include guide.md
-    const hasGuide = indexContent.files.some(f => f.name === 'guide.md');
-    expect(hasGuide).toBe(false);
+    // Should not include catalog.md
+    const hasCatalog = indexContent.files.some(f => f.name === 'catalog.md');
+    expect(hasCatalog).toBe(false);
     
     // Should still include readme.md
     const hasReadme = indexContent.files.some(f => f.name === 'readme.md');

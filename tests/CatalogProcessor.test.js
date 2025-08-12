@@ -1,4 +1,4 @@
-import { LiftProcessor } from '../src/LiftProcessor.js';
+import { CatalogProcessor } from '../src/CatalogProcessor.js';
 import { DirectoryScanner } from '../src/DirectoryScanner.js';
 import { MarkdownProcessor } from '../src/MarkdownProcessor.js';
 import { OutputGenerator } from '../src/OutputGenerator.js';
@@ -6,7 +6,7 @@ import { IndexGenerator } from '../src/IndexGenerator.js';
 import { mkdir, writeFile, rm, readdir, stat, readFile } from 'fs/promises';
 import { join } from 'path';
 
-describe('LiftProcessor', () => {
+describe('CatalogProcessor', () => {
   const testInputDir = './tests/tmp_input';
   const testOutputDir = './tests/tmp_output';
 
@@ -15,7 +15,7 @@ describe('LiftProcessor', () => {
     await mkdir(testOutputDir, { recursive: true });
     // Create markdown files
     await writeFile(join(testInputDir, 'index.md'), '# Index\n---\nIndex content');
-    await writeFile(join(testInputDir, 'guide.md'), '# Guide\nGuide content');
+    await writeFile(join(testInputDir, 'catalog.md'), '# Catalog\nCatalog content');
     await writeFile(join(testInputDir, 'other.txt'), 'Not markdown');
     await mkdir(join(testInputDir, 'node_modules'), { recursive: true });
     await writeFile(join(testInputDir, 'node_modules', 'ignore.md'), '# Should be ignored');
@@ -34,9 +34,9 @@ describe('LiftProcessor', () => {
   test('DirectoryScanner finds only markdown files and excludes patterns', async () => {
     const scanner = new DirectoryScanner();
     const files = await scanner.scanDirectory(testInputDir);
-    expect(files.length).toBe(3); // index.md, guide.md, subdir/nested.md
+    expect(files.length).toBe(3); // index.md, catalog.md, subdir/nested.md
     expect(files.some(f => f.endsWith('index.md'))).toBe(true);
-    expect(files.some(f => f.endsWith('guide.md'))).toBe(true);
+    expect(files.some(f => f.endsWith('catalog.md'))).toBe(true);
     expect(files.some(f => f.endsWith('nested.md'))).toBe(true);
     expect(files.some(f => f.includes('node_modules'))).toBe(false);
   });
@@ -95,7 +95,7 @@ describe('LiftProcessor', () => {
 
   describe('Index JSON Generation', () => {
     test('generateIndexFiles creates index.json files when enabled', async () => {
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: true });
+      const processor = new CatalogProcessor(testInputDir, testOutputDir, { generateIndex: true });
       await processor.process();
       
       // Check root index.json exists
@@ -115,7 +115,7 @@ describe('LiftProcessor', () => {
     });
 
     test('index.json contains expected metadata structure', async () => {
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: true });
+      const processor = new CatalogProcessor(testInputDir, testOutputDir, { generateIndex: true });
       await processor.process();
       
       const indexContent = JSON.parse(await readFile(join(testOutputDir, 'index.json'), 'utf8'));
@@ -157,7 +157,7 @@ describe('LiftProcessor', () => {
     });
 
     test('master-index.json aggregates all directory data', async () => {
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: true });
+      const processor = new CatalogProcessor(testInputDir, testOutputDir, { generateIndex: true });
       await processor.process();
       
       const masterIndex = JSON.parse(await readFile(join(testOutputDir, 'master-index.json'), 'utf8'));
@@ -182,7 +182,7 @@ describe('LiftProcessor', () => {
     });
 
     test('index generation excludes excluded patterns', async () => {
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: true });
+      const processor = new CatalogProcessor(testInputDir, testOutputDir, { generateIndex: true });
       await processor.process();
       
       const indexContent = JSON.parse(await readFile(join(testOutputDir, 'index.json'), 'utf8'));
@@ -205,7 +205,7 @@ describe('LiftProcessor', () => {
       await rm(testOutputDir, { recursive: true, force: true });
       await mkdir(testOutputDir, { recursive: true });
       
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: false });
+      const processor = new CatalogProcessor(testInputDir, testOutputDir, { generateIndex: false });
       await processor.process();
       
       // Check that index files are not created
