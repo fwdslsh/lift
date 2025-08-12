@@ -17,9 +17,9 @@ on:
         type: boolean
 
 env:
-  PROJECT_NAME: lift
+  PROJECT_NAME: guide
   REPO_OWNER: fwdslsh
-  REPO_NAME: lift
+  REPO_NAME: guide
   DOCKERHUB_USER: fwdslsh
 
 permissions:
@@ -82,7 +82,7 @@ jobs:
           mkdir -p ./release-assets
           
           # Copy all binaries and checksums to release assets directory
-          find ./artifacts -name "lift-*" -type f | while read file; do
+          find ./artifacts -name "guide-*" -type f | while read file; do
             cp "$file" ./release-assets/
           done
           
@@ -132,11 +132,11 @@ jobs:
           
           | Platform | Architecture | Download |
           |----------|--------------|----------|
-          | Linux | x86_64 | [lift-linux-x86_64](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/lift-linux-x86_64) |
-          | Linux | ARM64 | [lift-linux-arm64](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/lift-linux-arm64) |
-          | macOS | Intel | [lift-darwin-x86_64](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/lift-darwin-x86_64) |
-          | macOS | Apple Silicon | [lift-darwin-arm64](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/lift-darwin-arm64) |
-          | Windows | x86_64 | [lift-windows-x86_64.exe](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/lift-windows-x86_64.exe) |
+          | Linux | x86_64 | [guide-linux-x86_64](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/guide-linux-x86_64) |
+          | Linux | ARM64 | [guide-linux-arm64](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/guide-linux-arm64) |
+          | macOS | Intel | [guide-darwin-x86_64](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/guide-darwin-x86_64) |
+          | macOS | Apple Silicon | [guide-darwin-arm64](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/guide-darwin-arm64) |
+          | Windows | x86_64 | [guide-windows-x86_64.exe](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/releases/download/${{ steps.release-info.outputs.tag }}/guide-windows-x86_64.exe) |
           
           ### Docker
           ```bash
@@ -148,28 +148,28 @@ jobs:
           
           ```bash
           # Scan current directory, output to current directory
-          lift
+          guide
           
           # Specify input and output directories
-          lift --input docs --output build
+          guide --input docs --output build
           
           # Generate index.json files for directory navigation
-          lift --input docs --output build --generate-index
+          guide --input docs --output build --generate-index
           
           # Silent mode
-          lift --input docs --output build --silent
+          guide --input docs --output build --silent
           ```
           
           ## Integration with inform
           
-          Lift works seamlessly with [inform](https://github.com/fwdslsh/inform) for complete documentation workflows:
+          Guide works seamlessly with [inform](https://github.com/fwdslsh/inform) for complete documentation workflows:
           
           ```bash
           # Crawl documentation site
           inform https://docs.example.com --output-dir docs
           
           # Generate LLMS artifacts
-          lift --input docs --output build --generate-index
+          guide --input docs --output build --generate-index
           ```
           
           ## Verification

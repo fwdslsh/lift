@@ -1,56 +1,56 @@
-# Lift
+# Guide
 
 A lightweight CLI that scans a directory of Markdown and HTML files to generate `llms.txt` (structured index) and `llms-full.txt` (full content), designed to integrate seamlessly with `inform` and follow the fwdslsh philosophy.
 
 ## Philosophy
 
-**Lift** embodies the fwdslsh ethos: minimal, readable, and effective. It bridges crawling (via `inform`) to AI-generated documentation formats (`llms.txt`), using familiar, easy-to-understand CLI patterns.
+**Guide** embodies the fwdslsh ethos: minimal, readable, and effective. It bridges crawling (via `inform`) to AI-generated documentation formats (`llms.txt`), using familiar, easy-to-understand CLI patterns.
 
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/fwdslsh/lift/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/fwdslsh/guide/main/install.sh | sh
 ```
 
 ### Manual Downloads
 
-Download pre-built binaries from [GitHub Releases](https://github.com/fwdslsh/lift/releases).
+Download pre-built binaries from [GitHub Releases](https://github.com/fwdslsh/guide/releases).
 
 ### Docker
 
 ```bash
-docker run fwdslsh/lift:latest --help
+docker run fwdslsh/guide:latest --help
 ```
 
 ## Usage
 
 ```bash
 # Default (scan current directory, output to current directory)
-lift
+guide
 
 # Specify input and output directories
-lift --input docs --output build
+guide --input docs --output build
 
 # Use short flags
-lift -i docs -o build
+guide -i docs -o build
 
 # Include only specific file patterns
-lift --include "*.md" --include "guide/*.html"
+guide --include "*.md" --include "guide/*.html"
 
 # Exclude specific patterns  
-lift --exclude "*.draft.md" --exclude "temp/*"
+guide --exclude "*.draft.md" --exclude "temp/*"
 
 # Combine include/exclude with other options
-lift -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
+guide -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
 
 # Silent mode (suppress non-error output)
-lift --input docs --output build --silent
+guide --input docs --output build --silent
 
 # Show help
-lift --help
+guide --help
 
 # Show version
-lift --version
+guide --version
 ```
 
 ## Flags
@@ -77,34 +77,34 @@ lift --version
 **Include patterns** (whitelist specific files):
 ```bash
 # Include only markdown files
-lift --include "*.md"
+guide --include "*.md"
 
 # Include specific directories and file types
-lift --include "docs/*.md" --include "guides/*.html"
+guide --include "docs/*.md" --include "guides/*.html"
 
 # Include files with specific naming patterns
-lift --include "*guide*" --include "*tutorial*"
+guide --include "*guide*" --include "*tutorial*"
 ```
 
 **Exclude patterns** (blacklist specific files):
 ```bash
 # Exclude draft files
-lift --exclude "*.draft.md" --exclude "*draft*"
+guide --exclude "*.draft.md" --exclude "*draft*"
 
 # Exclude temporary directories
-lift --exclude "temp/*" --exclude "backup/*"
+guide --exclude "temp/*" --exclude "backup/*"
 
 # Exclude specific file patterns
-lift --exclude "**/*test*" --exclude "**/*.bak"
+guide --exclude "**/*test*" --exclude "**/*.bak"
 ```
 
 **Combining patterns**:
 ```bash
 # Include all docs but exclude drafts
-lift --include "docs/**/*" --exclude "**/draft*"
+guide --include "docs/**/*" --exclude "**/draft*"
 
 # Process only markdown, exclude specific directories
-lift --include "*.md" --exclude "archive/*" --exclude "deprecated/*"
+guide --include "*.md" --exclude "archive/*" --exclude "deprecated/*"
 ```
 
 ### Document Processing
@@ -134,7 +134,7 @@ lift --include "*.md" --exclude "archive/*" --exclude "deprecated/*"
 
 #### `index.json` Files (Directory Navigation)
 
-When the `--generate-index` flag is used, Lift generates comprehensive directory navigation files:
+When the `--generate-index` flag is used, Guide generates comprehensive directory navigation files:
 
 - **`index.json`** in each directory: Contains metadata for all files and subdirectories
 - **`master-index.json`** at output root: Aggregates project-wide statistics and directory navigation
@@ -280,11 +280,11 @@ docs/
 
 ## Architecture
 
-Lift follows SOLID design principles with a modular, extensible architecture:
+Guides follows SOLID design principles with a modular, extensible architecture:
 
 ### Core Components
 
-- **`LiftProcessor`**: Main orchestrator that coordinates the workflow
+- **`GuideProcessor`**: Main orchestrator that coordinates the workflow
 - **`DirectoryScanner`**: Handles file discovery and directory traversal
 - **`MarkdownProcessor`**: Processes markdown content and applies document ordering
 - **`OutputGenerator`**: Creates llms.txt output files
@@ -299,7 +299,7 @@ Lift follows SOLID design principles with a modular, extensible architecture:
 
 ### Workflow
 
-1. `LiftProcessor` initializes and configures specialized components
+1. `GuideProcessor` initializes and configures specialized components
 2. `DirectoryScanner` discovers all markdown files in the input directory
 3. `MarkdownProcessor` reads, cleans, and orders documents by importance
 4. `OutputGenerator` creates the llms.txt and llms-full.txt files
@@ -309,17 +309,17 @@ For detailed technical specifications, see the [App Spec](docs/app-spec.md).
 
 ## Integration with `inform`
 
-**Lift** is designed to work seamlessly with [`inform`](https://github.com/fwdslsh/inform):
+**Guide** is designed to work seamlessly with [`inform`](https://github.com/fwdslsh/inform):
 
 ```bash
 # Use inform to crawl a site into local docs
 inform https://docs.example.com --output-dir docs
 
-# Use lift to generate LLMS artifacts from the crawled content
-lift --input docs --output build
+# Use guide to generate LLMS artifacts from the crawled content
+guide --input docs --output build
 
 # Generate with directory index files for navigation
-lift --input docs --output build --generate-index
+guide --input docs --output build --generate-index
 ```
 
 This composable approach follows the fwdslsh philosophy of minimal, focused tools that work well together.

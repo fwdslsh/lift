@@ -1,4 +1,4 @@
-import { LiftProcessor } from '../src/LiftProcessor.js';
+import { GuideProcessor } from '../src/GuideProcessor.js';
 import { DirectoryScanner } from '../src/DirectoryScanner.js';
 import { MarkdownProcessor } from '../src/MarkdownProcessor.js';
 import { OutputGenerator } from '../src/OutputGenerator.js';
@@ -6,7 +6,7 @@ import { IndexGenerator } from '../src/IndexGenerator.js';
 import { mkdir, writeFile, rm, readdir, stat, readFile } from 'fs/promises';
 import { join } from 'path';
 
-describe('LiftProcessor', () => {
+describe('GuideProcessor', () => {
   const testInputDir = './tests/tmp_input';
   const testOutputDir = './tests/tmp_output';
 
@@ -95,7 +95,7 @@ describe('LiftProcessor', () => {
 
   describe('Index JSON Generation', () => {
     test('generateIndexFiles creates index.json files when enabled', async () => {
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: true });
+      const processor = new GuideProcessor(testInputDir, testOutputDir, { generateIndex: true });
       await processor.process();
       
       // Check root index.json exists
@@ -115,7 +115,7 @@ describe('LiftProcessor', () => {
     });
 
     test('index.json contains expected metadata structure', async () => {
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: true });
+      const processor = new GuideProcessor(testInputDir, testOutputDir, { generateIndex: true });
       await processor.process();
       
       const indexContent = JSON.parse(await readFile(join(testOutputDir, 'index.json'), 'utf8'));
@@ -157,7 +157,7 @@ describe('LiftProcessor', () => {
     });
 
     test('master-index.json aggregates all directory data', async () => {
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: true });
+      const processor = new GuideProcessor(testInputDir, testOutputDir, { generateIndex: true });
       await processor.process();
       
       const masterIndex = JSON.parse(await readFile(join(testOutputDir, 'master-index.json'), 'utf8'));
@@ -182,7 +182,7 @@ describe('LiftProcessor', () => {
     });
 
     test('index generation excludes excluded patterns', async () => {
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: true });
+      const processor = new GuideProcessor(testInputDir, testOutputDir, { generateIndex: true });
       await processor.process();
       
       const indexContent = JSON.parse(await readFile(join(testOutputDir, 'index.json'), 'utf8'));
@@ -205,7 +205,7 @@ describe('LiftProcessor', () => {
       await rm(testOutputDir, { recursive: true, force: true });
       await mkdir(testOutputDir, { recursive: true });
       
-      const processor = new LiftProcessor(testInputDir, testOutputDir, { generateIndex: false });
+      const processor = new GuideProcessor(testInputDir, testOutputDir, { generateIndex: false });
       await processor.process();
       
       // Check that index files are not created

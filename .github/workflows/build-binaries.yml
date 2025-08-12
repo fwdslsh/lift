@@ -21,7 +21,7 @@ on:
         default: true
         type: boolean
 env:
-  PROJECT_NAME: lift
+  PROJECT_NAME: guide
   CLI_ENTRYPOINT: src/cli.js
 
 jobs:

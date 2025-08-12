@@ -1,26 +1,26 @@
 {
-  "name": "@fwdslsh/lift",
+  "name": "@fwdslsh/guide",
   "version": "0.0.6",
   "description": "A lightweight CLI that scans a directory of Markdown and HTML files to generate llms.txt (structured index), llms-full.txt (full content), and optional index.json files for directory navigation and metadata",
   "type": "module",
   "main": "src/cli.js",
   "bin": {
-    "lift": "./src/cli.js"
+    "guide": "./src/cli.js"
   },
   "scripts": {
     "start": "bun src/cli.js",
     "dev": "bun --watch src/cli.js",
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "build": "bun build src/cli.js --compile --outfile=lift",
+    "build": "bun build src/cli.js --compile --outfile=guide",
     "build:all": "npm run build:linux && npm run build:macos && npm run build:windows",
-    "build:linux": "bun build src/cli.js --compile --target=linux-x64 --outfile=lift-linux-x86_64",
-    "build:macos": "bun build src/cli.js --compile --target=darwin-x64 --outfile=lift-darwin-x86_64",
-    "build:windows": "bun build src/cli.js --compile --target=windows-x64 --outfile=lift-windows-x86_64.exe",
-    "clean": "rm -f lift lift-* *.exe",
-    "docker:build": "docker build -t fwdslsh/lift .",
-    "docker:run": "docker run --rm fwdslsh/lift",
-    "docker:test": "docker run --rm -v $(pwd)/tests/fixtures:/workspace fwdslsh/lift -i test-docs -o .",
+    "build:linux": "bun build src/cli.js --compile --target=linux-x64 --outfile=guide-linux-x86_64",
+    "build:macos": "bun build src/cli.js --compile --target=darwin-x64 --outfile=guide-darwin-x86_64",
+    "build:windows": "bun build src/cli.js --compile --target=windows-x64 --outfile=guide-windows-x86_64.exe",
+    "clean": "rm -f guide guide-* *.exe",
+    "docker:build": "docker build -t fwdslsh/guide .",
+    "docker:run": "docker run --rm fwdslsh/guide",
+    "docker:test": "docker run --rm -v $(pwd)/tests/fixtures:/workspace fwdslsh/guide -i test-docs -o .",
     "release:prepare": "npm run clean && npm run test && npm run build:all"
   },
   "keywords": [

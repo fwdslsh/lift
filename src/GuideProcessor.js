@@ -5,10 +5,10 @@ import { OutputGenerator } from "./OutputGenerator.js";
 import { IndexGenerator } from "./IndexGenerator.js";
 
 /**
- * LiftProcessor - Main orchestrator for the Lift tool
+ * GuideProcessor - Main orchestrator for the Guide tool
  * Follows Single Responsibility Principle by delegating specific tasks to specialized classes
  */
-export class LiftProcessor {
+export class GuideProcessor {
   constructor(inputDir = ".", outputDir = ".", options = {}) {
     this.inputDir = resolve(inputDir);
     this.outputDir = resolve(outputDir);

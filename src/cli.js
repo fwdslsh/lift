@@ -1,16 +1,16 @@
 #!/usr/bin/env bun
 
-import { LiftProcessor } from './LiftProcessor.js';
+import { GuideProcessor } from './GuideProcessor.js';
 
 // Version is embedded at build time or taken from package.json in development
-const VERSION = process.env.LIFT_VERSION || '0.0.1';
+const VERSION = process.env.GUIDE_VERSION || '0.0.1';
 
 function showHelp() {
   console.log(`
-Lift - Generate llms.txt from a directory of markdown and HTML files
+Guide - Generate llms.txt from a directory of markdown and HTML files
 
 Usage:
-  lift [options]
+  guide [options]
 
 Options:
   --input, -i <path>     Source directory of Markdown/HTML files (default: current directory)
@@ -24,22 +24,22 @@ Options:
 
 Examples:
   # Default (current directory)
-  lift
+  guide
 
   # Specify input and output directories
-  lift --input docs --output build
+  guide --input docs --output build
 
   # Include only specific patterns
-  lift --include "*.md" --include "guide/*.html"
+  guide --include "*.md" --include "guide/*.html"
 
   # Exclude specific patterns
-  lift --exclude "*.draft.md" --exclude "temp/*"
+  guide --exclude "*.draft.md" --exclude "temp/*"
 
   # Combine include/exclude with other options
-  lift -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
+  guide -i docs -o build --include "*.md" --exclude "draft/*" --generate-index
 
   # Silent mode
-  lift -i docs -o build --silent
+  guide -i docs -o build --silent
 
 File Types:
   - Markdown files (.md, .mdx)
@@ -146,7 +146,7 @@ async function main() {
   try {
     const options = parseArgs();
     
-    const processor = new LiftProcessor(options.input, options.output, {
+    const processor = new GuideProcessor(options.input, options.output, {
       silent: options.silent,
       generateIndex: options.generateIndex,
       includeGlobs: options.includeGlobs,
